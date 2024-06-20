@@ -1,11 +1,11 @@
 package com.togetherhana.sharingAccount.entity;
 
 import com.togetherhana.base.BaseEntity;
+import com.togetherhana.base.SportsType;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity(name="sharing_account")
-@Table(name="sharing_account")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -27,7 +27,8 @@ public class SharingAccount extends BaseEntity {
     // 계좌번호
     private Long sharingAccountNumber;
 
-    private String sharePurpose;
+    @Enumerated(EnumType.STRING)
+    private SportsType sharePurpose;
 
     private String sharingAccountPassword;
 

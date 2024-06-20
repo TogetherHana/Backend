@@ -11,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
-public class Myteam extends BaseEntity {
+public class MyTeam extends BaseEntity {
 
     // 응원팀 아이디
     @Id
@@ -22,7 +22,7 @@ public class Myteam extends BaseEntity {
     // 멤버 아이디
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_idx")
-    private Member memberIdx;
+    private Member member;
 
     // 구단 아이디
     @ManyToOne(fetch = FetchType.LAZY)

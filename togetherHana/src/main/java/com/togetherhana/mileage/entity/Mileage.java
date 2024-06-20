@@ -19,11 +19,6 @@ public class Mileage extends BaseEntity {
     @Column(name = "mileage_idx")
     private Long mileageIdx;
 
-    // 소유주
-    @OneToOne
-    @JoinColumn(name = "member_idx")
-    private Member member;
-
     // 보유액
     private Long amount;
 }

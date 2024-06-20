@@ -7,7 +7,6 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity(name="sharing_member")
-@Table(name="sharing_member")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -20,16 +19,15 @@ public class SharingMember extends BaseEntity {
     @Column(name = "sharing_member_idx")
     private Long sharingMemberIdx;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "sharing_account_idx")
     private SharingAccount sharingAccount;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "member_idx")
     private Member member;
 
     // ROLE
-    @ColumnDefault("false")
     private Boolean isLeader;
 
 }

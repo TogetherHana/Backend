@@ -5,9 +5,8 @@ import com.togetherhana.base.SportsType;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name="sportsclub")
-@Table(name="sportsclub")
-@NoArgsConstructor
+@Entity(name="sports_club")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
@@ -23,7 +22,7 @@ public class SportsClub extends BaseEntity {
     private String name;
 
     // 엠블럼 이미지 URL
-    private String img;
+    private String imgUrl;
 
     @Enumerated(EnumType.STRING)
     private SportsType type;
