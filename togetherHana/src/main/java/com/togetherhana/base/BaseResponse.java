@@ -24,6 +24,10 @@ public class BaseResponse<T> {
 		return new BaseResponse<>(Boolean.TRUE, HttpStatus.OK.toString(), HttpStatus.OK.value(), result);
 	}
 
+	public static <T> BaseResponse<T> success() {
+		return new BaseResponse<>(Boolean.TRUE, HttpStatus.OK.toString(), HttpStatus.OK.value());
+	}
+
 	public static  <T> BaseResponse<T> fail(ErrorType errorType) {
 		return new BaseResponse<>(Boolean.FALSE, errorType.getMessage(), errorType.getHttpStatusCode());
 	}
