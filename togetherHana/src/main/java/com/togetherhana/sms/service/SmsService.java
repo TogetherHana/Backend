@@ -1,5 +1,9 @@
 package com.togetherhana.sms.service;
 
+import com.togetherhana.auth.dto.SmsCertificationDto;
+import com.togetherhana.auth.dto.SmsRequestDto;
+import com.togetherhana.exception.BaseException;
+import com.togetherhana.exception.ErrorType;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +32,11 @@ public class SmsService {
                 apiSecret, "https://api.coolsms.co.kr");
     }
 
-    public Boolean sendCertificationMessage(String phoneNumber) {
+    public Boolean sendCertificationMessage(SmsRequestDto smsRequestDto) {
         String certification = createCertificationNumber();
         String text = CERTIFICATION + certification + " 입니다.";
-        sendMessage(phoneNumber, text);
-        redisTemplate.opsForValue().set(phoneNumber, certification, 5, TimeUnit.MINUTES);
+        sendMessage(smsRequestDto.getPhoneNumber(), text);
+        redisTemplate.opsForValue().set(smsRequestDto.getPhoneNumber(), certification, 5, TimeUnit.MINUTES);
         return Boolean.TRUE;
     }
 
@@ -47,6 +51,19 @@ public class SmsService {
         } catch (NurigoMessageNotReceivedException | NurigoEmptyResponseException | NurigoUnknownException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Boolean certify(SmsCertificationDto smsCertificationDto) {
+        Object certification = redisTemplate.opsForValue().get(smsCertificationDto.getPhoneNumber());
+        if (certification == null) {
+            throw new BaseException(ErrorType.BAD_REQUEST);
+        }
+        String code = (String) certification;
+        if (!code.equals(smsCertificationDto.getCertificationCode())) {
+            throw new BaseException(ErrorType.UNAUTHORIZED);
+        }
+
+        return Boolean.TRUE;
     }
 
     private String createCertificationNumber() {
