@@ -1,11 +1,14 @@
 package com.togetherhana.game.service;
 
+import static com.togetherhana.exception.ErrorType.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.togetherhana.exception.BaseException;
 import com.togetherhana.game.dto.GameOptionDto;
 import com.togetherhana.game.dto.request.GameCreateRequestDto;
 import com.togetherhana.game.entity.Game;
@@ -30,6 +33,8 @@ public class GameService {
 
 		SharingAccount sharingAccount = sharingAccountService.findBySharingAccountIdx(sharingAccountIdx);
 
+		verifyIsThereOngoingGame(sharingAccount);
+
 		Game game = Game.builder()
 			.gameTitle(gameCreateRequestDto.getGameTitle())
 			.deadline(gameCreateRequestDto.getDeadLine())
@@ -40,6 +45,12 @@ public class GameService {
 
 		List<GameOption> gameOptions = makeGameOptions(savedGame, gameCreateRequestDto.getGameOptions());
 		gameOptionRepository.saveAll(gameOptions);
+	}
+
+	private void verifyIsThereOngoingGame(SharingAccount sharingAccount) {
+		if (gameRepository.existsBySharingAccountAndIsPlaying(sharingAccount, true)) {
+			throw new BaseException(ALREADY_GAME_CREATED);
+		}
 	}
 
 	private List<GameOption> makeGameOptions(Game savedGame, List<GameOptionDto> gameOptionDtos) {
