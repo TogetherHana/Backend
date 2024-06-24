@@ -24,6 +24,7 @@ public enum ErrorType {
 	 * 404 NOT FOUND
 	 */
 	NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 리소스입니다."),
+	SHARING_ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 모임통장이 존재하지 않습니다."),
 
 	/**
 	 * 500 INTERNAL SERVER
