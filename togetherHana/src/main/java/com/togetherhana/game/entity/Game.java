@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -40,4 +41,12 @@ public class Game extends BaseEntity {
     @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
     private List<GameParticipant> gameParticipants;
 
+    @Builder
+    public Game(String gameTitle, LocalDateTime deadline, Integer fine, SharingAccount sharingAccount) {
+        this.gameTitle = gameTitle;
+        this.deadline = deadline;
+        this.fine = fine;
+        this.sharingAccount = sharingAccount;
+        this.isPlaying = Boolean.TRUE;
+    }
 }
