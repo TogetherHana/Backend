@@ -15,6 +15,7 @@ public enum ErrorType {
 	 */
 	BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
 	ALREADY_GAME_CREATED(HttpStatus.BAD_REQUEST, "이미 진행중인 게임이 있습니다."),
+	IS_DEADLINE_PASSED(HttpStatus.BAD_REQUEST, "투표마감시간이 지났습니다."),
 
 	/**
 	 * 401 UNAUTHROZIED

@@ -2,6 +2,8 @@ package com.togetherhana.game.service;
 
 import static com.togetherhana.exception.ErrorType.*;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,6 +76,8 @@ public class GameService {
 		Game game = gameRepository.findById(optionChoiceRequestDto.getGameIdx())
 			.orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
 
+		verifyIsDeadLinePassed(game.getDeadline());
+		
 		GameOption gameOption = gameOptionRepository.findById(optionChoiceRequestDto.getGameOptionIdx())
 			.orElseThrow(() -> new BaseException(GAME_OPTION_NOT_FOUND));
 
@@ -89,6 +93,14 @@ public class GameService {
 			.build();
 
 		gameParticipantRepository.save(gameParticipant);
+	}
+
+	private void verifyIsDeadLinePassed(LocalDateTime deadline) {
+		LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+
+		if (now.isAfter(deadline)) {
+			throw new BaseException(IS_DEADLINE_PASSED);
+		}
 	}
 
 }
