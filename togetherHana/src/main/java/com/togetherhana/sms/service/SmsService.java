@@ -63,6 +63,8 @@ public class SmsService {
             throw new BaseException(ErrorType.UNAUTHORIZED);
         }
 
+        redisTemplate.delete(smsCertificationDto.getPhoneNumber());
+
         return Boolean.TRUE;
     }
 

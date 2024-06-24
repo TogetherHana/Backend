@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
-public class SmsCertificationDto {
-    private String phoneNumber;
-    private String certificationCode;
+public class AccountCheckDto {
+    private String accountNumber;
+    private String bankName;
 }

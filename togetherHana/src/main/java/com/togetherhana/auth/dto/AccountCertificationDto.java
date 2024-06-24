@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@NoArgsConstructor
-public class SmsCertificationDto {
-    private String phoneNumber;
-    private String certificationCode;
+public class AccountCertificationDto {
+    private String accountNumber;
+    private String certificationNumber;
 }
