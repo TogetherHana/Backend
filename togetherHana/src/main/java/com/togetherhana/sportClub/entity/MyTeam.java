@@ -27,6 +27,6 @@ public class MyTeam extends BaseEntity {
     // 구단 아이디
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sports_club_idx")
-    private SportsClub sportsClubIdx;
+    private SportsClub sportsClub;
 
 }

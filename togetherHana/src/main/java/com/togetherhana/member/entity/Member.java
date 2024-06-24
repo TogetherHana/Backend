@@ -22,6 +22,8 @@ public class Member extends BaseEntity {
 
     private String name;
 
+    private String nickname;
+
     private Long accountNumber;
 
     private String phoneNumber;

@@ -1,4 +1,4 @@
-package com.togetherhana.match.entity;
+package com.togetherhana.game.entity;
 
 import com.togetherhana.base.BaseEntity;
 import com.togetherhana.sharingAccount.entity.SharingMember;
@@ -18,10 +18,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class MatchParticipant extends BaseEntity {
+public class GameParticipant extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "match_participant_id")
+    @Column(name = "game_participant_id")
     private Long id;
 
     @ManyToOne
@@ -29,12 +29,12 @@ public class MatchParticipant extends BaseEntity {
     private SharingMember sharingMember;
 
     @ManyToOne
-    @JoinColumn(name = "match_option_idx")
-    private MatchOption matchOption;
+    @JoinColumn(name = "game_option_idx")
+    private GameOption gameOption;
 
     @ManyToOne
-    @JoinColumn(name = "match_idx")
-    private Match match;
+    @JoinColumn(name = "game_idx")
+    private Game game;
 
     private Boolean isWinner;
 }
