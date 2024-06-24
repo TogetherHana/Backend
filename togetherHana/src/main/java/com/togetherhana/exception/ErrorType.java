@@ -26,7 +26,9 @@ public enum ErrorType {
 	 */
 	NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 리소스입니다."),
 	SHARING_ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 모임통장이 존재하지 않습니다."),
-
+	SHARING_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 모임원이 존재하지 않습니다."),
+	GAME_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 게임이 존재하지 않습니다."),
+	GAME_OPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 게임선택지가 존재하지 않습니다."),
 	/**
 	 * 500 INTERNAL SERVER
 	 */
