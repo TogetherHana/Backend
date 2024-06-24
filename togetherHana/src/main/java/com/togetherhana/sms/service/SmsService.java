@@ -49,18 +49,18 @@ public class SmsService {
         try {
             messageService.send(message);
         } catch (NurigoMessageNotReceivedException | NurigoEmptyResponseException | NurigoUnknownException e) {
-            throw new RuntimeException(e);
+            throw new BaseException(ErrorType.WRONG_PHONE_NUMBER);
         }
     }
 
     public Boolean certify(SmsCertificationDto smsCertificationDto) {
         Object certification = redisTemplate.opsForValue().get(smsCertificationDto.getPhoneNumber());
         if (certification == null) {
-            throw new BaseException(ErrorType.BAD_REQUEST);
+            throw new BaseException(ErrorType.WRONG_PHONE_NUMBER);
         }
         String code = (String) certification;
         if (!code.equals(smsCertificationDto.getCertificationCode())) {
-            throw new BaseException(ErrorType.UNAUTHORIZED);
+            throw new BaseException(ErrorType.WRONG_CERTIFICATION_NUMBER);
         }
 
         redisTemplate.delete(smsCertificationDto.getPhoneNumber());

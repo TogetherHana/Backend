@@ -14,7 +14,9 @@ public enum ErrorType {
 	 * 400 BAD REQUEST
 	 */
 	BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
-
+	WRONG_PHONE_NUMBER(HttpStatus.BAD_REQUEST,"올바르지 않은 전화번호입니다."),
+	WRONG_CERTIFICATION_NUMBER(HttpStatus.BAD_REQUEST, "일치하지 않는 인증번호입니다."),
+	WRONG_ACCOUNT_NUMBER(HttpStatus.BAD_REQUEST,"올바르지 않은 계좌번호입니다."),
 	/**
 	 * 401 UNAUTHROZIED
 	 */

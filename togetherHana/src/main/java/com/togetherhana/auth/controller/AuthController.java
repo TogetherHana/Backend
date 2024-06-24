@@ -42,4 +42,9 @@ public class AuthController {
         return BaseResponse.success(authService.verifyAccountAuthCode(accountCertificationDto));
     }
 
+//    @GetMapping("/login")
+//    public BaseResponse<LoginResponse> login(@RequestParam(name = "deviceToken") String deviceToken) {
+//
+//    }
+
 }

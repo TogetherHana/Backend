@@ -31,11 +31,11 @@ public class AuthService {
     public Boolean verifyAccountAuthCode(AccountCertificationDto accountCertificationDto) {
         Object certification = redisTemplate.opsForValue().get(accountCertificationDto.getAccountNumber());
         if (certification == null) {
-            throw new BaseException(ErrorType.BAD_REQUEST);
+            throw new BaseException(ErrorType.WRONG_ACCOUNT_NUMBER);
         }
         String code = (String) certification;
         if (!code.equals(accountCertificationDto.getCertificationNumber())) {
-            throw new BaseException(ErrorType.UNAUTHORIZED);
+            throw new BaseException(ErrorType.WRONG_CERTIFICATION_NUMBER);
         }
 
         redisTemplate.delete(accountCertificationDto.getAccountNumber());
