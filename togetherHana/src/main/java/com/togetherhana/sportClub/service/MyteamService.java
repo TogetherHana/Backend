@@ -5,7 +5,6 @@ import com.togetherhana.exception.BaseException;
 import com.togetherhana.exception.ErrorType;
 import com.togetherhana.member.entity.Member;
 import com.togetherhana.member.repository.MemberRepository;
-import com.togetherhana.sportClub.dto.MyteamRequest;
 import com.togetherhana.sportClub.dto.SportsClubResponse;
 import com.togetherhana.sportClub.entity.MyTeam;
 import com.togetherhana.sportClub.entity.SportsClub;
@@ -38,10 +37,8 @@ public class MyteamService {
         return sportsClubs.stream().map(SportsClubResponse::new).toList();
     }
 
-    public Long saveMyteam(MyteamRequest myteamRequest) {
-        Member member = memberRepository.findById(myteamRequest.getMemberIdx())
-                .orElseThrow(() -> new BaseException(ErrorType.INVAILD_MEMBER_IDX));
-        SportsClub sportsClub = sportsClubRepository.findById(myteamRequest.getSportsClubIdx())
+    public Long saveMyteam(Long sportsClubIdx, Member member) {
+        SportsClub sportsClub = sportsClubRepository.findById(sportsClubIdx)
                 .orElseThrow(() -> new BaseException(ErrorType.NO_SPORTSCLUB_INFO));
 
         MyTeam myTeam = MyTeam.builder().member(member).sportsClub(sportsClub).build();
