@@ -1,25 +1,25 @@
-package com.togetherhana.match.entity;
+package com.togetherhana.game.entity;
 
 import com.togetherhana.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name="match_option")
+@Entity(name="game_option")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
-public class MatchOption extends BaseEntity {
+public class GameOption extends BaseEntity {
 
     // 빅매치 선택지 아이디
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "match_option_idx")
-    private Long matchOptionIdx;
+    @Column(name = "game_option_idx")
+    private Long gameOptionIdx;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "match_idx")
-    private Match match;
+    @JoinColumn(name = "game_idx")
+    private Game game;
 
     private String optionTitle;
 

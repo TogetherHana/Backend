@@ -1,4 +1,4 @@
-package com.togetherhana.match.entity;
+package com.togetherhana.game.entity;
 
 import com.togetherhana.base.BaseEntity;
 import com.togetherhana.sharingAccount.entity.SharingAccount;
@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,13 +23,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class Match extends BaseEntity {
+public class Game extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "match_idx")
+    @Column(name = "game_idx")
     private Long id;
 
-    private String matchTitle;
+    private String gameTitle;
     private LocalDateTime deadline;
     private Integer fine;
     private Boolean isPlaying;
@@ -37,7 +38,15 @@ public class Match extends BaseEntity {
     @JoinColumn(name = "sharing_account_idx")
     private SharingAccount sharingAccount;
 
-    @OneToMany(mappedBy = "match", fetch = FetchType.LAZY)
-    private List<MatchParticipant> matchParticipants;
+    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
+    private List<GameParticipant> gameParticipants;
 
+    @Builder
+    public Game(String gameTitle, LocalDateTime deadline, Integer fine, SharingAccount sharingAccount) {
+        this.gameTitle = gameTitle;
+        this.deadline = deadline;
+        this.fine = fine;
+        this.sharingAccount = sharingAccount;
+        this.isPlaying = Boolean.TRUE;
+    }
 }
