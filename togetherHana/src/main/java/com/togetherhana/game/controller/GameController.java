@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.togetherhana.base.BaseResponse;
 import com.togetherhana.game.dto.request.GameCreateRequestDto;
+import com.togetherhana.game.dto.request.OptionChoiceRequestDto;
 import com.togetherhana.game.service.GameService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,17 @@ public class GameController {
 		@RequestBody final GameCreateRequestDto gameCreateRequestDto)
 	{
 		gameService.createGame(sharingAccountIdx, gameCreateRequestDto);
+		return BaseResponse.success();
+	}
+
+	@PostMapping("/game/option")
+	public BaseResponse vote(@RequestBody OptionChoiceRequestDto optionChoiceRequestDto) {
+
+		/**
+		 * 추후 수정
+		 */
+		Long memberId = 1L;
+		gameService.vote(memberId, optionChoiceRequestDto);
 		return BaseResponse.success();
 	}
 

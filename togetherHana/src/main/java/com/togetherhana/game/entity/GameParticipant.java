@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 public class GameParticipant extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "game_participant_id")
+    @Column(name = "game_participant_idx")
     private Long id;
 
     @ManyToOne
@@ -37,4 +38,12 @@ public class GameParticipant extends BaseEntity {
     private Game game;
 
     private Boolean isWinner;
+
+    @Builder
+    public GameParticipant(SharingMember sharingMember, GameOption gameOption, Game game) {
+        this.sharingMember = sharingMember;
+        this.gameOption = gameOption;
+        this.game = game;
+        this.isWinner = Boolean.FALSE;
+    }
 }
