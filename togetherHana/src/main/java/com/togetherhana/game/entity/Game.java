@@ -49,4 +49,8 @@ public class Game extends BaseEntity {
         this.sharingAccount = sharingAccount;
         this.isPlaying = Boolean.TRUE;
     }
+
+    public void endGame() {
+        this.isPlaying = Boolean.FALSE;
+    }
 }
