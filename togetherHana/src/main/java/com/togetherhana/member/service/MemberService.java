@@ -51,4 +51,12 @@ public class MemberService {
         }
         return member;
     }
+
+    public Boolean nicknameDuplicationCheck(String nickname) {
+        Member member = memberRepository.findByNickname(nickname);
+        if(member != null) {
+            return true;
+        }
+        return false;
+    }
 }

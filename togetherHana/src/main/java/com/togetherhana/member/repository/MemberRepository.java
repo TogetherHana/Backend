@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("SELECT m FROM member m JOIN m.deviceInfos d WHERE d.deviceToken = :deviceToken")
     Member findByDeviceToken(@Param("deviceToken") String deviceToken);
-
+    Member findByNickname(String nickname);
     Member findByPhoneNumberAndName(String phoneNumber, String name);
 }
