@@ -154,12 +154,9 @@ public class GameService {
 	}
 
 	private List<Member> toLoserMembers(List<GameParticipant> loserParticipants) {
-		List<Member> loserMembers = new ArrayList<>();
-		for (GameParticipant gameParticipant : loserParticipants) {
-			Member member = gameParticipant.getSharingMember().getMember();
-			loserMembers.add(member);
-		}
-		return loserMembers;
+		return loserParticipants.stream()
+			.map(gameParticipant -> gameParticipant.getSharingMember().getMember())
+			.collect(Collectors.toList());
 	}
 
 	private GameSelectResponseDto createGameSelectResponseDto(Game game, List<Member> loserMembers) {
