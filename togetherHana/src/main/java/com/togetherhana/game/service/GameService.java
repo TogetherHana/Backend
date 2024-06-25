@@ -111,14 +111,26 @@ public class GameService {
 
 		Game game = findGameById(optionChoiceRequestDto.getGameIdx());
 
+		verifyIsLeader(game.getSharingAccount(), memberIdx);
+
 		List<GameParticipant> gameParticipants = gameParticipantRepository.findByGame(game);
 
 		List<GameParticipant> loserParticipants = decideWinnerAndLosers(gameParticipants, optionChoiceRequestDto.getGameOptionIdx());
 		List<Member> loserMembers = toLoserMembers(loserParticipants);
 
 		game.endGame();
+
 		return createGameSelectResponseDto(game, loserMembers);
 
+	}
+
+	private void verifyIsLeader(SharingAccount sharingAccount, Long memberIdx) {
+		SharingMember sharingMember = sharingMemberService.findBySharingAccountAndMemberIdx(
+			sharingAccount, memberIdx);
+
+		if(sharingMember.getIsLeader().equals(Boolean.FALSE)) {
+			throw new BaseException(LEADER_PRIVILEGES_REQUIRED);
+		}
 	}
 
 	private Game findGameById(Long gameId) {
