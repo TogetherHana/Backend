@@ -25,6 +25,7 @@ public enum ErrorType {
 	 * 401 UNAUTHROZIED
 	 */
 	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증되지 않았습니다."),
+	LEADER_PRIVILEGES_REQUIRED(HttpStatus.UNAUTHORIZED, "총무 권한이 필요합니다."),
 
 	/**
 	 * 404 NOT FOUND

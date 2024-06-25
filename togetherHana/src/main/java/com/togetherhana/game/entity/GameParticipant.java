@@ -46,4 +46,8 @@ public class GameParticipant extends BaseEntity {
         this.game = game;
         this.isWinner = Boolean.FALSE;
     }
+
+    public void setWinner() {
+        this.isWinner = Boolean.TRUE;
+    }
 }
