@@ -19,7 +19,7 @@ public class MemberController {
     public BaseResponse<Long> register(@RequestBody SignUpRequest signUpRequest) {
         return BaseResponse.success(memberService.saveMember(signUpRequest));
     }
-    @GetMapping("/nicknameCheck")
+    @GetMapping("/nickname-check")
     public BaseResponse<Boolean> register(@RequestParam("nickname") String nickname) {
         log.info("nickname is {}", nickname);
         return BaseResponse.success(memberService.nicknameDuplicationCheck(nickname));

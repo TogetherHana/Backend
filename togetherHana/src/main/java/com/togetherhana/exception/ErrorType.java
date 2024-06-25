@@ -28,6 +28,9 @@ public enum ErrorType {
 	EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
 	INVALID_JWT(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
 	INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 리프레시 토큰입니다."),
+	UNSUPPORTED_TOKEN(HttpStatus.UNAUTHORIZED, "지원하지 않는 토큰입니다."),
+	NO_CLAIMS_JWT(HttpStatus.UNAUTHORIZED,"인증된 정보가 없습니다."),
+	UNKNOWN_JWT_ERROR(HttpStatus.UNAUTHORIZED, "인증에 실패하였습니다."),
 	/**
 	 * 404 NOT FOUND
 	 */

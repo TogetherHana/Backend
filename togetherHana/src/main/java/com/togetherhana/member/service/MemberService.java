@@ -9,6 +9,7 @@ import com.togetherhana.mileage.entity.Mileage;
 import com.togetherhana.mileage.repository.MileageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,32 +17,32 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MileageRepository mileageRepository;
 
+    @Transactional
     public Long saveMember(SignUpRequest signUpRequest) {
-        boolean joinCheck = joinedMemberCheck(signUpRequest);
-        if(!joinCheck){
-            // 마일리지 생성
-            Mileage mileage = mileageRepository.save(Mileage.builder().amount(0L).build());
-            // 회원가입 진행
-            Member member = Member.builder()
-                    .accountNumber(signUpRequest.getAccountNumber())
-                    .name(signUpRequest.getName())
-                    .address(signUpRequest.getAddress())
-                    .nickname(signUpRequest.getNickname())
-                    .phoneNumber(signUpRequest.getPhoneNumber())
-                    .mileage(mileage)
-                    .build();
-            Member savedMember = memberRepository.save(member);
-            return savedMember.getMemberIdx();
-        }
-        throw new BaseException(ErrorType.JOINED_MEMBER);
+        // 가입여부 확인
+        joinedMemberCheck(signUpRequest);
+
+        // 마일리지 생성
+        Mileage mileage = mileageRepository.save(Mileage.builder().amount(0L).build());
+        // 회원가입 진행
+        Member member = Member.builder()
+                .accountNumber(signUpRequest.getAccountNumber())
+                .name(signUpRequest.getName())
+                .address(signUpRequest.getAddress())
+                .nickname(signUpRequest.getNickname())
+                .phoneNumber(signUpRequest.getPhoneNumber())
+                .mileage(mileage)
+                .build();
+        Member savedMember = memberRepository.save(member);
+        return savedMember.getMemberIdx();
+
     }
 
-    public boolean joinedMemberCheck(SignUpRequest signUpRequest) {
+    public void joinedMemberCheck(SignUpRequest signUpRequest) {
         Member member = memberRepository.findByPhoneNumberAndName(signUpRequest.getPhoneNumber(), signUpRequest.getName());
-        if(member == null) {
-            return false;
+        if(member != null) {
+            throw new BaseException(ErrorType.JOINED_MEMBER);
         }
-        return true;
     }
 
     public Member getMemberByDeviceToken(String deviceToken){
