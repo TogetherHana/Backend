@@ -143,13 +143,15 @@ public class GameService {
 		Long gameOptionIdx)
 	{
 		List<GameParticipant> loserParticipants = new ArrayList<>();
-		for (GameParticipant gameParticipant : gameParticipants) {
+
+		gameParticipants.forEach(gameParticipant -> {
 			if (gameParticipant.getGameOption().getGameOptionIdx().equals(gameOptionIdx)) {
 				gameParticipant.setWinner();
 			} else {
 				loserParticipants.add(gameParticipant);
 			}
-		}
+		});
+
 		return loserParticipants;
 	}
 
