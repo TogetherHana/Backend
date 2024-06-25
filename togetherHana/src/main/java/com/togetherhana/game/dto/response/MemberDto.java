@@ -8,10 +8,10 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class GameParticipantDto {
+public class MemberDto {
 	private String nickname;
 
-	public static GameParticipantDto of(Member member) {
-		return new GameParticipantDto(member.getNickname());
+	public static MemberDto of(Member member) {
+		return new MemberDto(member.getNickname());
 	}
 }

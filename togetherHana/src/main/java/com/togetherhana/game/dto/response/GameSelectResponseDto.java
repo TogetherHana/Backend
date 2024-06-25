@@ -10,9 +10,9 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class GameSelectResponseDto {
 		String gameTitle;
-		List<GameParticipantDto> losers;
+		List<MemberDto> losers;
 
-		public static GameSelectResponseDto of(String gameTitle, List<GameParticipantDto> losers) {
+		public static GameSelectResponseDto of(String gameTitle, List<MemberDto> losers) {
 			return new GameSelectResponseDto(gameTitle, losers);
 		}
 }

@@ -1,17 +1,13 @@
 package com.togetherhana.game.controller;
 
-import java.util.List;
-
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.togetherhana.base.BaseResponse;
 import com.togetherhana.game.dto.request.GameCreateRequestDto;
 import com.togetherhana.game.dto.request.OptionChoiceRequestDto;
-import com.togetherhana.game.dto.response.GameParticipantDto;
 import com.togetherhana.game.dto.response.GameSelectResponseDto;
 import com.togetherhana.game.service.GameService;
 

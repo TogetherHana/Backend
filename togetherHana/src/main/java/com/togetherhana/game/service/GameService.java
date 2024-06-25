@@ -15,7 +15,7 @@ import com.togetherhana.exception.BaseException;
 import com.togetherhana.game.dto.GameOptionDto;
 import com.togetherhana.game.dto.request.GameCreateRequestDto;
 import com.togetherhana.game.dto.request.OptionChoiceRequestDto;
-import com.togetherhana.game.dto.response.GameParticipantDto;
+import com.togetherhana.game.dto.response.MemberDto;
 import com.togetherhana.game.dto.response.GameSelectResponseDto;
 import com.togetherhana.game.entity.Game;
 import com.togetherhana.game.entity.GameOption;
@@ -162,11 +162,11 @@ public class GameService {
 	}
 
 	private GameSelectResponseDto createGameSelectResponseDto(Game game, List<Member> loserMembers) {
-		List<GameParticipantDto> gameParticipantDtos = loserMembers.stream()
-			.map(GameParticipantDto::of)
+		List<MemberDto> memberDtos = loserMembers.stream()
+			.map(MemberDto::of)
 			.collect(Collectors.toList());
 
-		return GameSelectResponseDto.of(game.getGameTitle(), gameParticipantDtos);
+		return GameSelectResponseDto.of(game.getGameTitle(), memberDtos);
 	}
 
 }
