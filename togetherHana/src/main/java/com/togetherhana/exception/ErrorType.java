@@ -25,17 +25,21 @@ public enum ErrorType {
 	 * 401 UNAUTHROZIED
 	 */
 	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증되지 않았습니다."),
-
+	EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
+	INVALID_JWT(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
+	INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 리프레시 토큰입니다."),
 	/**
 	 * 404 NOT FOUND
 	 */
 	NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 리소스입니다."),
 	NO_SPORTSCLUB_INFO(HttpStatus.NOT_FOUND, "구단 정보가 존재하지 않습니다."),
 	INVAILD_MEMBER_IDX(HttpStatus.NOT_FOUND, "존재하지 않는 멤버입니다."),
+	MEMBER_BY_DEVICE_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "멤버 정보를 찾을 수 없습니다."),
 	SHARING_ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 모임통장이 존재하지 않습니다."),
 	SHARING_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 모임원이 존재하지 않습니다."),
 	GAME_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 게임이 존재하지 않습니다."),
 	GAME_OPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 게임선택지가 존재하지 않습니다."),
+
 	/**
 	 * 500 INTERNAL SERVER
 	 */
