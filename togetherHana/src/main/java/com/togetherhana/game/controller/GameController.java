@@ -31,36 +31,36 @@ public class GameController {
     @PostMapping("/{sharingAccountIdx}")
     public BaseResponse createGame(
             @PathVariable(name = "sharingAccountIdx") final Long sharingAccountIdx,
-            @RequestBody final GameCreateRequestDto gameCreateRequestDto) {
+            @RequestBody final GameCreateRequestDto gameCreateRequestDto
+	) {
         gameService.createGame(sharingAccountIdx, gameCreateRequestDto);
         return BaseResponse.success();
     }
 
     @PostMapping("/option")
-    public BaseResponse vote(@Auth Member member, 
-                             @RequestBody OptionChoiceRequestDto optionChoiceRequestDto) {
+    public BaseResponse vote(@Auth Member member, @RequestBody OptionChoiceRequestDto optionChoiceRequestDto) {
         gameService.vote(member.getMemberIdx(), optionChoiceRequestDto);
         return BaseResponse.success();
     }
 
     @PostMapping("/select")
     public BaseResponse decideGameWinner(@Auth Member member,
-                                         @RequestBody OptionChoiceRequestDto optionChoiceRequestDto) {
-        GameSelectResponseDto gameSelectResponseDto = gameService.decideGameWinner(member.getMemberIdx(),
-                optionChoiceRequestDto);
-        return BaseResponse.success(gameSelectResponseDto);
+                                         @RequestBody OptionChoiceRequestDto optionChoiceRequestDto
+	) {
+        return BaseResponse.success(gameService.decideGameWinner(member.getMemberIdx(), optionChoiceRequestDto));
     }
 
 	@GetMapping("/{gameIdx}")
 	public BaseResponse getGameDetail(@Auth Member member,
-                                    @PathVariable(name = "gameIdx") final Long gameIdx) {
-		GameDetailResponseDto gameDetail = gameService.getGameDetail(member.getMemberIdx(), gameIdx);
-		return BaseResponse.success(gameDetail);
+									  @PathVariable(name = "gameIdx") final Long gameIdx
+	) {
+		return BaseResponse.success(gameService.getGameDetail(member.getMemberIdx(), gameIdx));
 	}
 
 	@GetMapping("/history/{sharingAccountIdx}")
-	public BaseResponse getGameHistoryAndCurrentGame(@PathVariable(name = "sharingAccountIdx") final Long sharingAccountIdx) {
-		GameHistoryResponseDto gameHistoryAndCurrentGame = gameService.getGameHistoryAndCurrentGame(sharingAccountIdx);
+	public BaseResponse getGameHistoryAndCurrentGame(
+		@PathVariable(name = "sharingAccountIdx") final Long sharingAccountIdx
+	) {
 		return BaseResponse.success(gameService.getGameHistoryAndCurrentGame(sharingAccountIdx));
 	}
 }
