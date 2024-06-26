@@ -13,4 +13,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Member findByDeviceToken(@Param("deviceToken") String deviceToken);
     Member findByNickname(String nickname);
     Member findByPhoneNumberAndName(String phoneNumber, String name);
+    Member findByMemberIdx(Long memberIdx);
 }
