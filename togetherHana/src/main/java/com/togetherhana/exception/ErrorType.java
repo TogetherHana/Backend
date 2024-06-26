@@ -31,9 +31,6 @@ public enum ErrorType {
 	 */
 	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증되지 않았습니다."),
 
-	NOT_A_LEADER(HttpStatus.UNAUTHORIZED, "모임통장의 총무권한이 없습니다."),
-
-
 	EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
 	INVALID_JWT(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
 	INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 리프레시 토큰입니다."),
