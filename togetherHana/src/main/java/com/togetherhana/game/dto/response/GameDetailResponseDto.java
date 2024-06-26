@@ -16,9 +16,9 @@ import lombok.Getter;
 @Builder(access = AccessLevel.PRIVATE)
 public class GameDetailResponseDto {
 	@JsonProperty("isVotingClosed")
-	private boolean isVotingClosed;
+	private boolean votingClosed;
 	@JsonProperty("isVotingMember")
-	private boolean isVotingMember;
+	private boolean votingMember;
 	private String gameTitle;
 	private LocalDateTime deadline;
 	private Integer fine;
@@ -31,8 +31,8 @@ public class GameDetailResponseDto {
 		List<GameOptionDto> gameOptionDtos
 	) {
 		return GameDetailResponseDto.builder()
-			.isVotingClosed(isVotingClosed)
-			.isVotingMember(isVotingMember)
+			.votingClosed(isVotingClosed)
+			.votingMember(isVotingMember)
 			.gameTitle(game.getGameTitle())
 			.deadline(game.getDeadline())
 			.fine(game.getFine())

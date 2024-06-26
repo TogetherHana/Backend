@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.togetherhana.exception.BaseException;
-import com.togetherhana.game.dto.GameOptionDto;
+import com.togetherhana.game.dto.request.GameOptionRequestDto;
 import com.togetherhana.game.dto.request.GameCreateRequestDto;
 import com.togetherhana.game.dto.request.OptionChoiceRequestDto;
+import com.togetherhana.game.dto.response.GameDetailResponseDto;
+import com.togetherhana.game.dto.response.GameOptionDto;
 import com.togetherhana.game.dto.response.MemberDto;
 import com.togetherhana.game.dto.response.GameSelectResponseDto;
 import com.togetherhana.game.entity.Game;
@@ -66,8 +68,8 @@ public class GameService {
 		}
 	}
 
-	private List<GameOption> makeGameOptions(Game savedGame, List<GameOptionDto> gameOptionDtos) {
-		return gameOptionDtos.stream()
+	private List<GameOption> makeGameOptions(Game savedGame, List<GameOptionRequestDto> gameOptionRequestDtos) {
+		return gameOptionRequestDtos.stream()
 			.map(optionDto -> GameOption.builder()
 				.game(savedGame)
 				.optionTitle(optionDto.getOptionTitle())
@@ -167,6 +169,31 @@ public class GameService {
 			.collect(Collectors.toList());
 
 		return GameSelectResponseDto.of(game.getGameTitle(), memberDtos);
+	}
+
+	@Transactional
+	public GameDetailResponseDto getGameDetail(Long memberIdx, Long gameIdx) {
+		Game game = gameRepository.findGameDetailByGameIdx(gameIdx)
+			.orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
+
+		LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+		boolean isVotingClosed = now.isAfter(game.getDeadline());
+		boolean isVotingMember = game.getGameParticipants().stream()
+			.anyMatch(participant -> participant.getSharingMember().getMember().getMemberIdx().equals(memberIdx));
+
+		List<GameOptionDto> gameOptionDtos = game.getGameParticipants().stream()
+			.collect(Collectors.groupingBy(GameParticipant::getGameOption))
+			.entrySet().stream()
+			.map(gameOptionEntry -> {
+				GameOption gameOption = gameOptionEntry.getKey();
+				List<MemberDto> memberDtos = gameOptionEntry.getValue().stream()
+					.map(gameParticipant -> MemberDto.of(gameParticipant.getSharingMember().getMember()))
+					.collect(Collectors.toList());
+				return GameOptionDto.of(gameOption, memberDtos);
+			})
+			.collect(Collectors.toList());
+
+		return GameDetailResponseDto.of(isVotingClosed, isVotingMember, game, gameOptionDtos);
 	}
 
 }
