@@ -53,6 +53,7 @@ public class MemberService {
         return member;
     }
 
+    // 닉네임 중복 체크
     public Boolean nicknameDuplicationCheck(String nickname) {
         Member member = memberRepository.findByNickname(nickname);
         if(member != null) {
@@ -60,4 +61,5 @@ public class MemberService {
         }
         return false;
     }
+
 }
