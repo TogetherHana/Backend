@@ -2,6 +2,7 @@ package com.togetherhana.game.controller;
 
 
 import com.togetherhana.auth.jwt.Auth;
+import com.togetherhana.game.dto.response.GameHistoryResponseDto;
 import com.togetherhana.member.entity.Member;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,22 +28,22 @@ import org.springframework.web.bind.annotation.*;
 public class GameController {
     private final GameService gameService;
 
-    @PostMapping("/game/{sharingAccountIdx}")
+    @PostMapping("/{sharingAccountIdx}")
     public BaseResponse createGame(
-            @PathVariable final Long sharingAccountIdx,
+            @PathVariable(name = "sharingAccountIdx") final Long sharingAccountIdx,
             @RequestBody final GameCreateRequestDto gameCreateRequestDto) {
         gameService.createGame(sharingAccountIdx, gameCreateRequestDto);
         return BaseResponse.success();
     }
 
-    @PostMapping("/game/option")
+    @PostMapping("/option")
     public BaseResponse vote(@Auth Member member, 
                              @RequestBody OptionChoiceRequestDto optionChoiceRequestDto) {
         gameService.vote(member.getMemberIdx(), optionChoiceRequestDto);
         return BaseResponse.success();
     }
 
-    @PostMapping("/game/select")
+    @PostMapping("/select")
     public BaseResponse decideGameWinner(@Auth Member member,
                                          @RequestBody OptionChoiceRequestDto optionChoiceRequestDto) {
         GameSelectResponseDto gameSelectResponseDto = gameService.decideGameWinner(member.getMemberIdx(),
@@ -55,5 +56,11 @@ public class GameController {
                                     @PathVariable(name = "gameIdx") final Long gameIdx) {
 		GameDetailResponseDto gameDetail = gameService.getGameDetail(member.getMemberIdx(), gameIdx);
 		return BaseResponse.success(gameDetail);
+	}
+
+	@GetMapping("/history/{sharingAccountIdx}")
+	public BaseResponse getGameHistoryAndCurrentGame(@PathVariable(name = "sharingAccountIdx") final Long sharingAccountIdx) {
+		GameHistoryResponseDto gameHistoryAndCurrentGame = gameService.getGameHistoryAndCurrentGame(sharingAccountIdx);
+		return BaseResponse.success(gameService.getGameHistoryAndCurrentGame(sharingAccountIdx));
 	}
 }
