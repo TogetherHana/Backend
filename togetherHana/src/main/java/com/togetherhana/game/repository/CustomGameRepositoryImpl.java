@@ -6,11 +6,12 @@ import org.springframework.stereotype.Repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.togetherhana.game.entity.Game;
-import com.togetherhana.game.entity.QGame;
-import com.togetherhana.game.entity.QGameOption;
-import com.togetherhana.game.entity.QGameParticipant;
-import com.togetherhana.member.entity.QMember;
-import com.togetherhana.sharingAccount.entity.QSharingMember;
+
+import static com.togetherhana.game.entity.QGame.game;
+import static com.togetherhana.game.entity.QGameOption.gameOption;
+import static com.togetherhana.game.entity.QGameParticipant.gameParticipant;
+import static com.togetherhana.member.entity.QMember.member;
+import static com.togetherhana.sharingAccount.entity.QSharingMember.sharingMember;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,21 +23,16 @@ public class CustomGameRepositoryImpl implements CustomGameRepository {
 
 	@Override
 	public Optional<Game> findGameDetailByGameIdx(Long gameIdx) {
-		QGame qGame = QGame.game;
-		QGameOption qGameOption = QGameOption.gameOption;
-		QGameParticipant qGameParticipant = QGameParticipant.gameParticipant;
-		QSharingMember qSharingMember = QSharingMember.sharingMember;
-		QMember qMember = QMember.member;
 
-		Game game = queryFactory
-			.selectFrom(qGame)
-			.leftJoin(qGame.gameParticipants, qGameParticipant).fetchJoin()
-			.leftJoin(qGameParticipant.gameOption, qGameOption).fetchJoin()
-			.leftJoin(qGameParticipant.sharingMember, qSharingMember).fetchJoin()
-			.leftJoin(qSharingMember.member, qMember).fetchJoin()
-			.where(qGame.id.eq(gameIdx))
+		Game finedGame = queryFactory
+			.selectFrom(game)
+			.leftJoin(game.gameParticipants, gameParticipant).fetchJoin()
+			.leftJoin(gameParticipant.gameOption, gameOption).fetchJoin()
+			.leftJoin(gameParticipant.sharingMember, sharingMember).fetchJoin()
+			.leftJoin(sharingMember.member, member).fetchJoin()
+			.where(game.id.eq(gameIdx))
 			.fetchOne();
 
-		return Optional.ofNullable(game);
+		return Optional.ofNullable(finedGame);
 	}
 }
