@@ -17,8 +17,10 @@ public class SharingAccountResponse {
     private Long remainBalance;
 
     public static SharingAccountResponse of(SharingAccount account) {
-        return new SharingAccountResponse(account.getSharingAccountIdx(), account.getSharingAccountName(),
-                String.valueOf(account.getSharingAccountNumber()), account.getRemainBalance());
+        return new SharingAccountResponse(account.getSharingAccountIdx(),
+                account.getSharingAccountName(),
+                String.valueOf(account.getSharingAccountNumber()),
+                account.getRemainBalance());
     }
 
 }

@@ -48,8 +48,12 @@ public class TransferService {
         verifyPassword(account.getSharingAccountPassword(), transferRequest.getAccountPassword());
 
         Long remainBalance = account.withdraw(transferRequest.getAmount());
-        TransferHistory history = TransferHistory.withdrawHistory(remainBalance, transferRequest.getAmount(),
-                member.getName(), transferRequest.getReceiver(), account);
+        TransferHistory history = TransferHistory
+                .withdrawHistory(remainBalance,
+                        transferRequest.getAmount(),
+                        member.getName(),
+                        transferRequest.getReceiver(),
+                        account);
 
         transferRepository.save(history);
         return true;

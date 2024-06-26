@@ -38,15 +38,29 @@ public class TransferHistory extends BaseEntity {
     @JoinColumn(name = "sharing_account_idx")
     private SharingAccount sharingAccount;
 
-    public static TransferHistory withdrawHistory(Long remainBalance, Long transactionAmount, String sender, String recipient,
-                                           SharingAccount sharingAccount) {
-        return new TransferHistory(null, remainBalance, transactionAmount, sender, recipient, TransactionType.WITHDRAW,
+    public static TransferHistory withdrawHistory(Long remainBalance,
+                                                  Long transactionAmount,
+                                                  String sender,
+                                                  String recipient,
+                                                  SharingAccount sharingAccount) {
+        return new TransferHistory(null,
+                remainBalance,
+                transactionAmount,
+                sender, recipient,
+                TransactionType.WITHDRAW,
                 sharingAccount);
     }
 
-    public static TransferHistory depositHistory(Long remainBalance, Long transactionAmount, String sender, String recipient,
-                                           SharingAccount sharingAccount) {
-        return new TransferHistory(null, remainBalance, transactionAmount, sender, recipient, TransactionType.DEPOSIT,
+    public static TransferHistory depositHistory(Long remainBalance,
+                                                 Long transactionAmount,
+                                                 String sender,
+                                                 String recipient,
+                                                 SharingAccount sharingAccount) {
+        return new TransferHistory(null,
+                remainBalance,
+                transactionAmount,
+                sender, recipient,
+                TransactionType.DEPOSIT,
                 sharingAccount);
     }
 }
