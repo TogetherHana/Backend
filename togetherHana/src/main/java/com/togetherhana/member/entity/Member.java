@@ -12,6 +12,7 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
+@ToString
 public class Member extends BaseEntity {
 
     // 멤버 아이디
@@ -22,6 +23,7 @@ public class Member extends BaseEntity {
 
     private String name;
 
+    @Column(unique = true, nullable = false)
     private String nickname;
 
     private Long accountNumber;
