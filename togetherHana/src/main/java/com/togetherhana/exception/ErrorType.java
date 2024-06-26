@@ -19,11 +19,15 @@ public enum ErrorType {
 	WRONG_ACCOUNT_NUMBER(HttpStatus.BAD_REQUEST,"올바르지 않은 계좌번호입니다."),
 	JOINED_MEMBER(HttpStatus.BAD_REQUEST, "이미 가입된 멤버입니다."),
 	ALREADY_GAME_CREATED(HttpStatus.BAD_REQUEST, "이미 진행중인 게임이 있습니다."),
+	WRONG_PASSWORD(HttpStatus.BAD_REQUEST,"계좌 비밀번호가 일치하지 않습니다."),
+	NOT_ENOUGH_BALANCE(HttpStatus.BAD_REQUEST, "계좌 잔액이 부족합니다."),
 
 	/**
 	 * 401 UNAUTHROZIED
 	 */
 	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증되지 않았습니다."),
+	NOT_A_LEADER(HttpStatus.UNAUTHORIZED, "모임통장의 총무권한이 없습니다."),
+
 
 	/**
 	 * 404 NOT FOUND
