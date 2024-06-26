@@ -1,5 +1,8 @@
 package com.togetherhana.sharingAccount.service;
 
+import static com.togetherhana.exception.ErrorType.LEADER_PRIVILEGES_REQUIRED;
+import static com.togetherhana.exception.ErrorType.SHARING_MEMBER_NOT_FOUND;
+
 import com.togetherhana.base.SportsType;
 import com.togetherhana.exception.BaseException;
 import com.togetherhana.exception.ErrorType;
@@ -58,6 +61,11 @@ public class SharingAccountService {
         );
     }
 
+    public SharingMember findBySharingAccountAndMemberIdx(Long sharingAccountIdx, Long memberIdx) {
+        return sharingMemberRepository.findBySharingAccount_SharingAccountIdxAndMember_MemberIdx(sharingAccountIdx, memberIdx)
+                .orElseThrow(() -> new BaseException(SHARING_MEMBER_NOT_FOUND));
+    }
+
     public List<SharingAccountResponse> findMySharingAccounts(Member member) {
         return sharingAccountRepository.findByMember(member).stream().map(SharingAccountResponse::of
         ).toList();
@@ -67,8 +75,14 @@ public class SharingAccountService {
         return sharingMemberRepository.findSharingMemberWithTeam(sharingAccountIdx);
     }
 
-    public SharingMember findLeaderOf(Long sharingAccountIdx) {
-        return sharingMemberRepository.findLeaderOf(sharingAccountIdx);
+    public void verifyIsLeader(Long sharingAccountIdx, Long memberIdx) {
+        SharingMember sharingMember = sharingMemberRepository.findBySharingAccount_SharingAccountIdxAndMember_MemberIdx(sharingAccountIdx,
+                        memberIdx)
+                .orElseThrow(() -> new BaseException(SHARING_MEMBER_NOT_FOUND));
+
+        if (sharingMember.getIsLeader().equals(Boolean.FALSE)) {
+            throw new BaseException(LEADER_PRIVILEGES_REQUIRED);
+        }
     }
 
 

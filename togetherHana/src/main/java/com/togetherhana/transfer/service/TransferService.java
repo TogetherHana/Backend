@@ -42,7 +42,7 @@ public class TransferService {
     @Transactional
     public Boolean withdraw(Member member, TransferRequest transferRequest) {
 
-        verifyLeaderRole(member, transferRequest.getSharingAccountIdx());
+        sharingAccountService.verifyIsLeader(transferRequest.getSharingAccountIdx(), member.getMemberIdx());
 
         SharingAccount account = sharingAccountService.findBySharingAccountIdx(transferRequest.getSharingAccountIdx());
         verifyPassword(account.getSharingAccountPassword(), transferRequest.getAccountPassword());
@@ -57,13 +57,6 @@ public class TransferService {
 
         transferRepository.save(history);
         return true;
-    }
-
-    private void verifyLeaderRole(Member member, Long sharingAccountIdx) {
-        SharingMember leader = sharingAccountService.findLeaderOf(sharingAccountIdx);
-        if (!Objects.equals(member.getMemberIdx(), leader.getMember().getMemberIdx())) {
-            throw new BaseException(ErrorType.NOT_A_LEADER);
-        }
     }
 
     private void verifyPassword(String accountPassword, String inputPassword) {

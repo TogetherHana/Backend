@@ -27,7 +27,6 @@ import com.togetherhana.member.entity.Member;
 import com.togetherhana.sharingAccount.entity.SharingAccount;
 import com.togetherhana.sharingAccount.entity.SharingMember;
 import com.togetherhana.sharingAccount.service.SharingAccountService;
-import com.togetherhana.sharingAccount.service.SharingMemberService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,7 +38,6 @@ public class GameService {
 	private final GameOptionRepository gameOptionRepository;
 	private final GameParticipantRepository gameParticipantRepository;
 	private final SharingAccountService sharingAccountService;
-	private final SharingMemberService sharingMemberService;
 
 	@Transactional
 	public void createGame(Long sharingAccountIdx, GameCreateRequestDto gameCreateRequestDto) {
@@ -85,8 +83,8 @@ public class GameService {
 			.orElseThrow(() -> new BaseException(GAME_OPTION_NOT_FOUND));
 
 		SharingAccount sharingAccount = game.getSharingAccount();
-		SharingMember sharingMember = sharingMemberService.findBySharingAccountAndMemberIdx(
-			sharingAccount, memberIdx);
+		SharingMember sharingMember = sharingAccountService.findBySharingAccountAndMemberIdx(
+			sharingAccount.getSharingAccountIdx(), memberIdx);
 
 		GameParticipant gameParticipant = GameParticipant
 			.builder()
@@ -111,7 +109,7 @@ public class GameService {
 
 		Game game = findGameById(optionChoiceRequestDto.getGameIdx());
 
-		verifyIsLeader(game.getSharingAccount(), memberIdx);
+		sharingAccountService.verifyIsLeader(game.getSharingAccount().getSharingAccountIdx(), memberIdx);
 
 		List<GameParticipant> gameParticipants = gameParticipantRepository.findByGame(game);
 
@@ -124,14 +122,7 @@ public class GameService {
 
 	}
 
-	private void verifyIsLeader(SharingAccount sharingAccount, Long memberIdx) {
-		SharingMember sharingMember = sharingMemberService.findBySharingAccountAndMemberIdx(
-			sharingAccount, memberIdx);
 
-		if(sharingMember.getIsLeader().equals(Boolean.FALSE)) {
-			throw new BaseException(LEADER_PRIVILEGES_REQUIRED);
-		}
-	}
 
 	private Game findGameById(Long gameId) {
 		return gameRepository.findById(gameId)
