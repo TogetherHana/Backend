@@ -12,4 +12,5 @@ import java.util.List;
 @Repository
 public interface MyteamRepository extends JpaRepository<MyTeam, Long> {
 
+    MyTeam findByMember_MemberIdx(Long memberIdx);
 }

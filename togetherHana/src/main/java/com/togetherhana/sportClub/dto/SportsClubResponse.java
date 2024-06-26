@@ -1,8 +1,10 @@
 package com.togetherhana.sportClub.dto;
 
 import com.togetherhana.sportClub.entity.SportsClub;
+import lombok.Getter;
 import lombok.ToString;
 
+@Getter
 @ToString
 public class SportsClubResponse {
     private Long sportsClubIdx;

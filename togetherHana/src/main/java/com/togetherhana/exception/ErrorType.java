@@ -20,6 +20,7 @@ public enum ErrorType {
 	JOINED_MEMBER(HttpStatus.BAD_REQUEST, "이미 가입된 멤버입니다."),
 	ALREADY_GAME_CREATED(HttpStatus.BAD_REQUEST, "이미 진행중인 게임이 있습니다."),
 	IS_DEADLINE_PASSED(HttpStatus.BAD_REQUEST, "투표마감시간이 지났습니다."),
+	ALREADY_MYTEAM_PICKED(HttpStatus.BAD_REQUEST, "이미 응원팀을 설정했습니다."),
 
 	/**
 	 * 401 UNAUTHROZIED

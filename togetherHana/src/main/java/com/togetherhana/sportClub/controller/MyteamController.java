@@ -3,6 +3,7 @@ package com.togetherhana.sportClub.controller;
 import com.togetherhana.base.BaseResponse;
 import com.togetherhana.base.SportsType;
 import com.togetherhana.member.entity.Member;
+import com.togetherhana.sportClub.dto.PickSportsClubRequest;
 import com.togetherhana.sportClub.dto.SportsClubResponse;
 import com.togetherhana.sportClub.entity.MyTeam;
 import com.togetherhana.sportClub.service.MyteamService;
@@ -23,12 +24,14 @@ public class MyteamController {
     @GetMapping("/all")
     public BaseResponse<List<SportsClubResponse>> getSportsCLubInfo(String type) {
         SportsType sportsType = SportsType.byName(type);
+        log.info(sportsType.toString());
         return BaseResponse.success(myteamService.getAllSportsClub(sportsType));
     }
 
     @PutMapping("/pick")
-    public BaseResponse<Long> selectMyteam(@RequestBody Long sportsClubIdx, @RequestBody Member member) {
-        return BaseResponse.success(myteamService.saveMyteam(sportsClubIdx, member));
+    public BaseResponse<Long> selectMyteam(@RequestBody PickSportsClubRequest pickSportsClubRequest) {
+        log.info(pickSportsClubRequest.toString());
+        return BaseResponse.success(myteamService.saveMyteam(pickSportsClubRequest.getSportsClubIdx(), pickSportsClubRequest.getMember()));
     }
 
 }

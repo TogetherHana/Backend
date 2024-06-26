@@ -37,12 +37,24 @@ public class MyteamService {
         return sportsClubs.stream().map(SportsClubResponse::new).toList();
     }
 
+    @Transactional
     public Long saveMyteam(Long sportsClubIdx, Member member) {
+        // 응원팀 설정 여부 확인
+        savedMyteamCheck(member);
+
+        // 응원팀 저장
         SportsClub sportsClub = sportsClubRepository.findById(sportsClubIdx)
                 .orElseThrow(() -> new BaseException(ErrorType.NO_SPORTSCLUB_INFO));
 
         MyTeam myTeam = MyTeam.builder().member(member).sportsClub(sportsClub).build();
         MyTeam CreatedMyTeam = myteamRepository.save(myTeam);
         return CreatedMyTeam.getMyTeamIdx();
+    }
+
+    public void savedMyteamCheck(Member member) {
+        MyTeam myTeam = myteamRepository.findByMember_MemberIdx(member.getMemberIdx());
+        if(myTeam != null){
+            throw new BaseException(ErrorType.ALREADY_MYTEAM_PICKED);
+        }
     }
 }
