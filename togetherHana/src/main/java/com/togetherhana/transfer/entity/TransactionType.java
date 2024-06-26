@@ -1,4 +1,4 @@
-package com.togetherhana.transferHistory.entity;
+package com.togetherhana.transfer.entity;
 
 import lombok.Getter;
 

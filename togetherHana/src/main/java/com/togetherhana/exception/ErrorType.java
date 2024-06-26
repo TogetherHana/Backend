@@ -19,12 +19,21 @@ public enum ErrorType {
 	WRONG_ACCOUNT_NUMBER(HttpStatus.BAD_REQUEST,"올바르지 않은 계좌번호입니다."),
 	JOINED_MEMBER(HttpStatus.BAD_REQUEST, "이미 가입된 멤버입니다."),
 	ALREADY_GAME_CREATED(HttpStatus.BAD_REQUEST, "이미 진행중인 게임이 있습니다."),
+
+	WRONG_PASSWORD(HttpStatus.BAD_REQUEST,"계좌 비밀번호가 일치하지 않습니다."),
+	NOT_ENOUGH_BALANCE(HttpStatus.BAD_REQUEST, "계좌 잔액이 부족합니다."),
+
 	IS_DEADLINE_PASSED(HttpStatus.BAD_REQUEST, "투표마감시간이 지났습니다."),
+
 
 	/**
 	 * 401 UNAUTHROZIED
 	 */
 	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증되지 않았습니다."),
+
+	NOT_A_LEADER(HttpStatus.UNAUTHORIZED, "모임통장의 총무권한이 없습니다."),
+
+
 	EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
 	INVALID_JWT(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
 	INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 리프레시 토큰입니다."),
@@ -32,6 +41,7 @@ public enum ErrorType {
 	NO_CLAIMS_JWT(HttpStatus.UNAUTHORIZED,"인증된 정보가 없습니다."),
 	UNKNOWN_JWT_ERROR(HttpStatus.UNAUTHORIZED, "인증에 실패하였습니다."),
 	LEADER_PRIVILEGES_REQUIRED(HttpStatus.UNAUTHORIZED, "총무 권한이 필요합니다."),
+
 
 	/**
 	 * 404 NOT FOUND
