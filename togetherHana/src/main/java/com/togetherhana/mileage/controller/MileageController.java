@@ -11,5 +11,4 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/mileage")
 public class MileageController {
 
-
 }

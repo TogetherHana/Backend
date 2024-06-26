@@ -1,10 +1,14 @@
 package com.togetherhana.sharingAccount.repository;
 
-import com.togetherhana.member.entity.Member;
+import java.util.Optional;
+
 import com.togetherhana.sharingAccount.entity.SharingMember;
-import java.util.List;
+import com.togetherhana.sharingAccount.entity.SharingAccount;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SharingMemberRepository extends JpaRepository<SharingMember, Long>, CustomSharingMemberRepository {
-
+  
+  Optional<SharingMember> findBySharingAccountAndMember_MemberIdx(SharingAccount sharingAccount, Long memberIdx);
 }
+
