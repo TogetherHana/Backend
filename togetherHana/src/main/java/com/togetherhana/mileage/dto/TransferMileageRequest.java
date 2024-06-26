@@ -10,12 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @Builder
-public class MileageResponse {
+public class TransferMileageRequest{
     private Long mileageIdx;
-    private Long amount;
-
-    public MileageResponse(Mileage mileage) {
-        this.mileageIdx = mileage.getMileageIdx();
-        this.amount = mileage.getAmount();
-    }
+    private Long withdrawalAmount;
 }

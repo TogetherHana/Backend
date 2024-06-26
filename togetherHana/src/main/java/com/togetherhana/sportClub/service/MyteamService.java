@@ -40,9 +40,14 @@ public class MyteamService {
     }
 
     @Transactional
-    public Long saveMyteam(Long sportsClubIdx, Member member) {
+    public Long saveMyteam(Long sportsClubIdx, Long memberIdx) {
+
         // 응원팀 설정 여부 확인
-        SportsClub sportsClub = savedMyteamCheck(sportsClubIdx,member);
+        SportsClub sportsClub = savedMyteamCheck(sportsClubIdx,memberIdx);
+
+        // 멤버 정보 조회
+        Member member = memberRepository.findById(memberIdx)
+                .orElseThrow(() -> new BaseException(ErrorType.INVAILD_MEMBER_IDX));
 
         // 응원팀 저장
         MyTeam myTeam = MyTeam.builder().member(member).sportsClub(sportsClub).build();
@@ -50,18 +55,17 @@ public class MyteamService {
         return CreatedMyTeam.getMyTeamIdx();
     }
 
-    public SportsClub savedMyteamCheck(Long sportsClubIdx, Member member) {
+    public SportsClub savedMyteamCheck(Long sportsClubIdx, Long memberIdx) {
         // 구단 정보 조회
         SportsClub sportsClub = sportsClubRepository.findById(sportsClubIdx)
                 .orElseThrow(() -> new BaseException(ErrorType.NO_SPORTSCLUB_INFO));
 
         // 종목별 1팀 설정 여부 체크
-        MyTeam myTeam = myteamRepository.findByMember_MemberIdxAndSportsClub_Type(member.getMemberIdx(),
-                                                                                    sportsClub.getType());
+        MyTeam myTeam = myteamRepository.findByMember_MemberIdxAndSportsClub_Type(memberIdx,
+                                                                                  sportsClub.getType());
         if(myTeam != null){
             throw new BaseException(ErrorType.ALREADY_MYTEAM_PICKED);
         }
-
         return sportsClub;
     }
 }

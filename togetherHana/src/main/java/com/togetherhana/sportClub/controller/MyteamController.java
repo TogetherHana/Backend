@@ -30,8 +30,8 @@ public class MyteamController {
 
     @PutMapping("/pick")
     public BaseResponse<Long> selectMyteam(@RequestBody PickSportsClubRequest pickSportsClubRequest) {
-        log.info(pickSportsClubRequest.toString());
-        return BaseResponse.success(myteamService.saveMyteam(pickSportsClubRequest.getSportsClubIdx(), pickSportsClubRequest.getMember()));
+        //log.info(pickSportsClubRequest.toString());
+        return BaseResponse.success(myteamService.saveMyteam(pickSportsClubRequest.getSportsClubIdx(), pickSportsClubRequest.getMemberIdx()));
     }
 
 }

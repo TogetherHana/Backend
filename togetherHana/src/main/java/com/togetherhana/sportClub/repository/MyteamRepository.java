@@ -12,6 +12,6 @@ import java.util.List;
 
 @Repository
 public interface MyteamRepository extends JpaRepository<MyTeam, Long> {
-
+    List<MyTeam> findByMember_MemberIdx(Long memberIdx);
     MyTeam findByMember_MemberIdxAndSportsClub_Type(Long member_memberIdx, SportsType sportsClub_type);
 }

@@ -10,5 +10,5 @@ import lombok.*;
 @ToString
 public class PickSportsClubRequest {
     private Long sportsClubIdx;
-    private Member member;
+    private Long memberIdx;
 }
