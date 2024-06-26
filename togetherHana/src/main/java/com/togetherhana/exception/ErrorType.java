@@ -32,6 +32,8 @@ public enum ErrorType {
 	UNSUPPORTED_TOKEN(HttpStatus.UNAUTHORIZED, "지원하지 않는 토큰입니다."),
 	NO_CLAIMS_JWT(HttpStatus.UNAUTHORIZED,"인증된 정보가 없습니다."),
 	UNKNOWN_JWT_ERROR(HttpStatus.UNAUTHORIZED, "인증에 실패하였습니다."),
+	LEADER_PRIVILEGES_REQUIRED(HttpStatus.UNAUTHORIZED, "총무 권한이 필요합니다."),
+
 	/**
 	 * 404 NOT FOUND
 	 */
