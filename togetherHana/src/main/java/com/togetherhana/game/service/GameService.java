@@ -4,6 +4,7 @@ import static com.togetherhana.exception.ErrorType.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,12 +15,15 @@ import com.togetherhana.exception.BaseException;
 import com.togetherhana.game.dto.GameOptionDto;
 import com.togetherhana.game.dto.request.GameCreateRequestDto;
 import com.togetherhana.game.dto.request.OptionChoiceRequestDto;
+import com.togetherhana.game.dto.response.MemberDto;
+import com.togetherhana.game.dto.response.GameSelectResponseDto;
 import com.togetherhana.game.entity.Game;
 import com.togetherhana.game.entity.GameOption;
 import com.togetherhana.game.entity.GameParticipant;
 import com.togetherhana.game.repository.GameOptionRepository;
 import com.togetherhana.game.repository.GameParticipantRepository;
 import com.togetherhana.game.repository.GameRepository;
+import com.togetherhana.member.entity.Member;
 import com.togetherhana.sharingAccount.entity.SharingAccount;
 import com.togetherhana.sharingAccount.entity.SharingMember;
 import com.togetherhana.sharingAccount.service.SharingAccountService;
@@ -73,8 +77,7 @@ public class GameService {
 
 	@Transactional
 	public void vote(Long memberIdx, OptionChoiceRequestDto optionChoiceRequestDto) {
-		Game game = gameRepository.findById(optionChoiceRequestDto.getGameIdx())
-			.orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
+		Game game = findGameById(optionChoiceRequestDto.getGameIdx());
 
 		verifyIsDeadLinePassed(game.getDeadline());
 		
@@ -101,6 +104,69 @@ public class GameService {
 		if (now.isAfter(deadline)) {
 			throw new BaseException(IS_DEADLINE_PASSED);
 		}
+	}
+
+	@Transactional
+	public GameSelectResponseDto decideGameWinner(Long memberIdx, OptionChoiceRequestDto optionChoiceRequestDto) {
+
+		Game game = findGameById(optionChoiceRequestDto.getGameIdx());
+
+		verifyIsLeader(game.getSharingAccount(), memberIdx);
+
+		List<GameParticipant> gameParticipants = gameParticipantRepository.findByGame(game);
+
+		List<GameParticipant> loserParticipants = decideWinnerAndLosers(gameParticipants, optionChoiceRequestDto.getGameOptionIdx());
+		List<Member> loserMembers = toLoserMembers(loserParticipants);
+
+		game.endGame();
+
+		return createGameSelectResponseDto(game, loserMembers);
+
+	}
+
+	private void verifyIsLeader(SharingAccount sharingAccount, Long memberIdx) {
+		SharingMember sharingMember = sharingMemberService.findBySharingAccountAndMemberIdx(
+			sharingAccount, memberIdx);
+
+		if(sharingMember.getIsLeader().equals(Boolean.FALSE)) {
+			throw new BaseException(LEADER_PRIVILEGES_REQUIRED);
+		}
+	}
+
+	private Game findGameById(Long gameId) {
+		return gameRepository.findById(gameId)
+			.orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
+	}
+
+	private List<GameParticipant> decideWinnerAndLosers(
+		List<GameParticipant> gameParticipants,
+		Long gameOptionIdx)
+	{
+		List<GameParticipant> loserParticipants = new ArrayList<>();
+
+		gameParticipants.forEach(gameParticipant -> {
+			if (gameParticipant.getGameOption().getGameOptionIdx().equals(gameOptionIdx)) {
+				gameParticipant.setWinner();
+			} else {
+				loserParticipants.add(gameParticipant);
+			}
+		});
+
+		return loserParticipants;
+	}
+
+	private List<Member> toLoserMembers(List<GameParticipant> loserParticipants) {
+		return loserParticipants.stream()
+			.map(gameParticipant -> gameParticipant.getSharingMember().getMember())
+			.collect(Collectors.toList());
+	}
+
+	private GameSelectResponseDto createGameSelectResponseDto(Game game, List<Member> loserMembers) {
+		List<MemberDto> memberDtos = loserMembers.stream()
+			.map(MemberDto::of)
+			.collect(Collectors.toList());
+
+		return GameSelectResponseDto.of(game.getGameTitle(), memberDtos);
 	}
 
 }
