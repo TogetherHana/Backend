@@ -1,8 +1,10 @@
 package com.togetherhana.member.controller;
 
+import com.togetherhana.auth.jwt.Auth;
 import com.togetherhana.base.BaseResponse;
 import com.togetherhana.member.dto.MyInfoResponse;
 import com.togetherhana.member.dto.SignUpRequest;
+import com.togetherhana.member.entity.Member;
 import com.togetherhana.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +30,8 @@ public class MemberController {
     }
 
     @GetMapping("/me")
-    public BaseResponse<MyInfoResponse> getMyInfo(@RequestParam Long memberIdx) {
-        return BaseResponse.success(memberService.getMyInfoByMemberIdx(memberIdx));
+    public BaseResponse<MyInfoResponse> getMyInfo(@Auth Member member) {
+        return BaseResponse.success(memberService.getMyInfoByMemberIdx(member.getMemberIdx()));
     }
 
 }
