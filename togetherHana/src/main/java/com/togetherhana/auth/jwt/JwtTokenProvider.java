@@ -67,10 +67,8 @@ public class JwtTokenProvider {
             return parseClaim(token);
         } catch (ExpiredJwtException e) {
             throw new BaseException(ErrorType.EXPIRED_TOKEN);
-        } catch (MalformedJwtException | IllegalArgumentException e) {
-            throw new BaseException(ErrorType.INVALID_JWT);
         } catch (Exception e) {
-            throw new BaseException(ErrorType.INTERNAL_SERVER);
+            throw new BaseException(ErrorType.INVALID_JWT);
         }
     }
 
