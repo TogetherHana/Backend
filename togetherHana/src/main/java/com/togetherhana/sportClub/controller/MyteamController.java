@@ -4,7 +4,6 @@ import com.togetherhana.auth.jwt.Auth;
 import com.togetherhana.base.BaseResponse;
 import com.togetherhana.base.SportsType;
 import com.togetherhana.member.entity.Member;
-import com.togetherhana.sportClub.dto.PickSportsClubRequest;
 import com.togetherhana.sportClub.dto.SportsClubResponse;
 import com.togetherhana.sportClub.entity.MyTeam;
 import com.togetherhana.sportClub.service.MyteamService;
