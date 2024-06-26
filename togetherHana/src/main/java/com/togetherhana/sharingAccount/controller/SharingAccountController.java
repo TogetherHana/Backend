@@ -1,5 +1,6 @@
 package com.togetherhana.sharingAccount.controller;
 
+import com.togetherhana.auth.jwt.Auth;
 import com.togetherhana.base.BaseResponse;
 import com.togetherhana.member.entity.Member;
 import com.togetherhana.member.repository.MemberRepository;
@@ -35,14 +36,13 @@ public class SharingAccountController {
 
     @PostMapping("/create")
     public BaseResponse<SharingAccountCreateResponse> createAccount(
+            @Auth Member member,
             @RequestBody SharingAccountCreateRequest sharingAccountCreateRequest) {
-        Member member = memberRepository.findById(1L).get();
         return BaseResponse.success(sharingAccountService.createAccount(member, sharingAccountCreateRequest));
     }
 
     @GetMapping("/my")
-    public BaseResponse<List<SharingAccountResponse>> myAccount() {
-        Member member = memberRepository.findById(1L).get();
+    public BaseResponse<List<SharingAccountResponse>> myAccount(@Auth Member member) {
         return BaseResponse.success(sharingAccountService.findMySharingAccounts(member));
     }
 
@@ -59,11 +59,8 @@ public class SharingAccountController {
     }
 
     @PostMapping("/withdraw")
-    public BaseResponse<Boolean> withdrawMoney(@RequestBody TransferRequest transferRequest) {
-        Member member = memberRepository.findById(1L).get();
+    public BaseResponse<Boolean> withdrawMoney(@Auth Member member, @RequestBody TransferRequest transferRequest) {
         return BaseResponse.success(transferService.withdraw(member, transferRequest));
-
     }
-
 
 }

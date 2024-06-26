@@ -1,5 +1,7 @@
 package com.togetherhana.game.controller;
 
+import com.togetherhana.auth.jwt.Auth;
+import com.togetherhana.member.entity.Member;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,37 +19,28 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GameController {
 
-	private final GameService gameService;
+    private final GameService gameService;
 
-	@PostMapping("/game/{sharingAccountIdx}")
-	public BaseResponse createGame(
-		@PathVariable final Long sharingAccountIdx,
-		@RequestBody final GameCreateRequestDto gameCreateRequestDto)
-	{
-		gameService.createGame(sharingAccountIdx, gameCreateRequestDto);
-		return BaseResponse.success();
-	}
+    @PostMapping("/game/{sharingAccountIdx}")
+    public BaseResponse createGame(
+            @PathVariable final Long sharingAccountIdx,
+            @RequestBody final GameCreateRequestDto gameCreateRequestDto) {
+        gameService.createGame(sharingAccountIdx, gameCreateRequestDto);
+        return BaseResponse.success();
+    }
 
-	@PostMapping("/game/option")
-	public BaseResponse vote(@RequestBody OptionChoiceRequestDto optionChoiceRequestDto) {
+    @PostMapping("/game/option")
+    public BaseResponse vote(@Auth Member member, @RequestBody OptionChoiceRequestDto optionChoiceRequestDto) {
+        gameService.vote(member.getMemberIdx(), optionChoiceRequestDto);
+        return BaseResponse.success();
+    }
 
-		/**
-		 * 추후 수정
-		 */
-		Long memberIdx = 1L;
-		gameService.vote(memberIdx, optionChoiceRequestDto);
-		return BaseResponse.success();
-	}
-
-	@PostMapping("/game/select")
-	public BaseResponse decideGameWinner(@RequestBody OptionChoiceRequestDto optionChoiceRequestDto) {
-
-		/**
-		 * 추후 수정
-		 */
-		Long memberIdx = 2L;
-		GameSelectResponseDto gameSelectResponseDto = gameService.decideGameWinner(memberIdx, optionChoiceRequestDto);
-		return BaseResponse.success(gameSelectResponseDto);
-	}
+    @PostMapping("/game/select")
+    public BaseResponse decideGameWinner(@Auth Member member,
+                                         @RequestBody OptionChoiceRequestDto optionChoiceRequestDto) {
+        GameSelectResponseDto gameSelectResponseDto = gameService.decideGameWinner(member.getMemberIdx(),
+                optionChoiceRequestDto);
+        return BaseResponse.success(gameSelectResponseDto);
+    }
 
 }
