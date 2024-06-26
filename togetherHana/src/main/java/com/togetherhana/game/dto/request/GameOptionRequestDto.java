@@ -1,8 +1,8 @@
-package com.togetherhana.game.dto;
+package com.togetherhana.game.dto.request;
 
 import lombok.Getter;
 
 @Getter
-public class GameOptionDto {
+public class GameOptionRequestDto {
 	private String optionTitle;
 }
