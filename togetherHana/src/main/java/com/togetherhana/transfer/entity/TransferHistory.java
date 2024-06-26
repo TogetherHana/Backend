@@ -1,4 +1,4 @@
-package com.togetherhana.transferHistory.entity;
+package com.togetherhana.transfer.entity;
 
 import com.togetherhana.base.BaseEntity;
 import com.togetherhana.sharingAccount.entity.SharingAccount;
@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 public class TransferHistory extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,4 +37,16 @@ public class TransferHistory extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "sharing_account_idx")
     private SharingAccount sharingAccount;
+
+    public static TransferHistory withdrawHistory(Long remainBalance, Long transactionAmount, String sender, String recipient,
+                                           SharingAccount sharingAccount) {
+        return new TransferHistory(null, remainBalance, transactionAmount, sender, recipient, TransactionType.WITHDRAW,
+                sharingAccount);
+    }
+
+    public static TransferHistory depositHistory(Long remainBalance, Long transactionAmount, String sender, String recipient,
+                                           SharingAccount sharingAccount) {
+        return new TransferHistory(null, remainBalance, transactionAmount, sender, recipient, TransactionType.DEPOSIT,
+                sharingAccount);
+    }
 }
