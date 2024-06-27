@@ -1,5 +1,6 @@
 package com.togetherhana.sportClub.controller;
 
+import com.togetherhana.auth.jwt.Auth;
 import com.togetherhana.base.BaseResponse;
 import com.togetherhana.base.SportsType;
 import com.togetherhana.member.entity.Member;
@@ -23,11 +24,13 @@ public class MyteamController {
     @GetMapping("/all")
     public BaseResponse<List<SportsClubResponse>> getSportsCLubInfo(String type) {
         SportsType sportsType = SportsType.byName(type);
+        log.info(sportsType.toString());
         return BaseResponse.success(myteamService.getAllSportsClub(sportsType));
     }
 
     @PutMapping("/pick")
-    public BaseResponse<Long> selectMyteam(@RequestBody Long sportsClubIdx, @RequestBody Member member) {
+    public BaseResponse<Long> selectMyteam(@Auth Member member, @RequestBody Long sportsClubIdx) {
+        //log.info("응원팀선택:" + sportsClubIdx);
         return BaseResponse.success(myteamService.saveMyteam(sportsClubIdx, member));
     }
 

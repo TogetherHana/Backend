@@ -24,6 +24,9 @@ public enum ErrorType {
 	NOT_ENOUGH_BALANCE(HttpStatus.BAD_REQUEST, "계좌 잔액이 부족합니다."),
 
 	IS_DEADLINE_PASSED(HttpStatus.BAD_REQUEST, "투표마감시간이 지났습니다."),
+	ALREADY_MYTEAM_PICKED(HttpStatus.BAD_REQUEST, "이미 응원팀을 설정했습니다."),
+
+	NOT_ENOUGH_MILEAGE_AMOUNT(HttpStatus.BAD_REQUEST, "마일리지 잔액이 부족합니다."),
 
 
 	/**
@@ -52,6 +55,7 @@ public enum ErrorType {
 	GAME_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 게임이 존재하지 않습니다."),
 	GAME_OPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 게임선택지가 존재하지 않습니다."),
 
+	INVAILD_MILEAGE_IDX(HttpStatus.NOT_FOUND, "마일리지 정보를 찾을 수 없습니다."),
 	/**
 	 * 500 INTERNAL SERVER
 	 */

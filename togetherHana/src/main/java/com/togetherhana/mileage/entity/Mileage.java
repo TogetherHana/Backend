@@ -1,6 +1,8 @@
 package com.togetherhana.mileage.entity;
 
 import com.togetherhana.base.BaseEntity;
+import com.togetherhana.exception.BaseException;
+import com.togetherhana.exception.ErrorType;
 import com.togetherhana.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,4 +23,11 @@ public class Mileage extends BaseEntity {
 
     // 보유액
     private Long amount;
+
+    public long withdraw(long usedAmount) {
+        if (this.amount < usedAmount) {
+            throw new BaseException(ErrorType.NOT_ENOUGH_MILEAGE_AMOUNT);
+        }
+        return amount -= usedAmount;
+    }
 }
