@@ -2,6 +2,7 @@ package com.togetherhana.game.controller;
 
 
 import com.togetherhana.auth.jwt.Auth;
+import com.togetherhana.game.dto.response.GameHistoryResponseDto;
 import com.togetherhana.member.entity.Member;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,33 +28,39 @@ import org.springframework.web.bind.annotation.*;
 public class GameController {
     private final GameService gameService;
 
-    @PostMapping("/game/{sharingAccountIdx}")
+    @PostMapping("/{sharingAccountIdx}")
     public BaseResponse createGame(
-            @PathVariable final Long sharingAccountIdx,
-            @RequestBody final GameCreateRequestDto gameCreateRequestDto) {
+            @PathVariable(name = "sharingAccountIdx") final Long sharingAccountIdx,
+            @RequestBody final GameCreateRequestDto gameCreateRequestDto
+	) {
         gameService.createGame(sharingAccountIdx, gameCreateRequestDto);
         return BaseResponse.success();
     }
 
-    @PostMapping("/game/option")
-    public BaseResponse vote(@Auth Member member, 
-                             @RequestBody OptionChoiceRequestDto optionChoiceRequestDto) {
+    @PostMapping("/option")
+    public BaseResponse vote(@Auth Member member, @RequestBody OptionChoiceRequestDto optionChoiceRequestDto) {
         gameService.vote(member.getMemberIdx(), optionChoiceRequestDto);
         return BaseResponse.success();
     }
 
-    @PostMapping("/game/select")
+    @PostMapping("/select")
     public BaseResponse decideGameWinner(@Auth Member member,
-                                         @RequestBody OptionChoiceRequestDto optionChoiceRequestDto) {
-        GameSelectResponseDto gameSelectResponseDto = gameService.decideGameWinner(member.getMemberIdx(),
-                optionChoiceRequestDto);
-        return BaseResponse.success(gameSelectResponseDto);
+                                         @RequestBody OptionChoiceRequestDto optionChoiceRequestDto
+	) {
+        return BaseResponse.success(gameService.decideGameWinner(member.getMemberIdx(), optionChoiceRequestDto));
     }
 
 	@GetMapping("/{gameIdx}")
 	public BaseResponse getGameDetail(@Auth Member member,
-                                    @PathVariable(name = "gameIdx") final Long gameIdx) {
-		GameDetailResponseDto gameDetail = gameService.getGameDetail(member.getMemberIdx(), gameIdx);
-		return BaseResponse.success(gameDetail);
+									  @PathVariable(name = "gameIdx") final Long gameIdx
+	) {
+		return BaseResponse.success(gameService.getGameDetail(member.getMemberIdx(), gameIdx));
+	}
+
+	@GetMapping("/history/{sharingAccountIdx}")
+	public BaseResponse getGameHistoryAndCurrentGame(
+		@PathVariable(name = "sharingAccountIdx") final Long sharingAccountIdx
+	) {
+		return BaseResponse.success(gameService.getGameHistoryAndCurrentGame(sharingAccountIdx));
 	}
 }
