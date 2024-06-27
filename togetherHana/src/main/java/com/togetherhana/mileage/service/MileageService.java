@@ -23,11 +23,7 @@ public class MileageService {
         // 마일리지 사용(잔액 -)
         long usedAmount = mileage.withdraw(transferMileageRequest.getWithdrawalAmount());
 
-        Mileage transferedMileage = Mileage.builder()
-                .mileageIdx(mileage.getMileageIdx())
-                .amount(usedAmount)
-                .build();
-        mileageRepository.save(transferedMileage);
         return true;
     }
+
 }

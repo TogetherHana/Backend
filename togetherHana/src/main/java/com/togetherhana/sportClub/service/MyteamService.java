@@ -40,14 +40,10 @@ public class MyteamService {
     }
 
     @Transactional
-    public Long saveMyteam(Long sportsClubIdx, Long memberIdx) {
+    public Long saveMyteam(Long sportsClubIdx, Member member) {
 
         // 응원팀 설정 여부 확인
-        SportsClub sportsClub = savedMyteamCheck(sportsClubIdx,memberIdx);
-
-        // 멤버 정보 조회
-        Member member = memberRepository.findById(memberIdx)
-                .orElseThrow(() -> new BaseException(ErrorType.INVAILD_MEMBER_IDX));
+        SportsClub sportsClub = savedMyteamCheck(sportsClubIdx, member.getMemberIdx());
 
         // 응원팀 저장
         MyTeam myTeam = MyTeam.builder().member(member).sportsClub(sportsClub).build();

@@ -31,7 +31,7 @@ public class MyteamController {
     @PutMapping("/pick")
     public BaseResponse<Long> selectMyteam(@Auth Member member, @RequestBody Long sportsClubIdx) {
         //log.info("응원팀선택:" + sportsClubIdx);
-        return BaseResponse.success(myteamService.saveMyteam(sportsClubIdx, member.getMemberIdx()));
+        return BaseResponse.success(myteamService.saveMyteam(sportsClubIdx, member));
     }
 
 }
