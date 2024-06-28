@@ -173,12 +173,12 @@ public class GameService {
 		boolean isVotingMember = game.getGameParticipants().stream()
 			.anyMatch(participant -> participant.getSharingMember().getMember().getMemberIdx().equals(memberIdx));
 
-		List<GameOptionDto> gameOptionDtos = game.getGameParticipants().stream()
-			.collect(Collectors.groupingBy(GameParticipant::getGameOption))
-			.entrySet().stream()
-			.map(gameOptionEntry -> {
-				GameOption gameOption = gameOptionEntry.getKey();
-				List<MemberDto> memberDtos = gameOptionEntry.getValue().stream()
+		List<GameOption> gameOptions = game.getGameOptions();
+
+		List<GameOptionDto> gameOptionDtos = gameOptions.stream()
+			.map(gameOption -> {
+				List<MemberDto> memberDtos = game.getGameParticipants().stream()
+					.filter(gameParticipant -> gameParticipant.getGameOption().equals(gameOption))
 					.map(gameParticipant -> MemberDto.of(gameParticipant.getSharingMember().getMember()))
 					.collect(Collectors.toList());
 				return GameOptionDto.of(gameOption, memberDtos);
