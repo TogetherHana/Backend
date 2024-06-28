@@ -27,7 +27,8 @@ public enum ErrorType {
 	ALREADY_MYTEAM_PICKED(HttpStatus.BAD_REQUEST, "이미 응원팀을 설정했습니다."),
 
 	NOT_ENOUGH_MILEAGE_AMOUNT(HttpStatus.BAD_REQUEST, "마일리지 잔액이 부족합니다."),
-
+	WRONG_INVITATION_CODE(HttpStatus.BAD_REQUEST, "일치하는 초대코드가 없습니다."),
+	NOT_COINCIDE_INVITATION(HttpStatus.BAD_REQUEST, "초대장 코드와 가입하려는 모임통장이 일치하지 않습니다."),
 
 	/**
 	 * 401 UNAUTHROZIED

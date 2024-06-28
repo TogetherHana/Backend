@@ -1,48 +1,40 @@
 package com.togetherhana.transfer.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.togetherhana.transfer.entity.TransactionType;
 import com.togetherhana.transfer.entity.TransferHistory;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 
 @Getter
-public abstract class TransferResponse {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class TransferResponse {
 
     private Long remainBalance;
     private Long transactionAmount;
     private TransactionType transferType;
+    @JsonInclude(Include.NON_NULL)
+    private String sender;
+    @JsonInclude(Include.NON_NULL)
+    private String recipient;
 
-    private TransferResponse(TransferHistory transferHistory) {
-        this.remainBalance = transferHistory.getRemainBalance();
-        this.transactionAmount = transferHistory.getTransactionAmount();
-        this.transferType = transferHistory.getTransferType();
-
+    public static TransferResponse toDepositResponse(TransferHistory transferHistory) {
+        return new TransferResponse(transferHistory.getRemainBalance(),
+                transferHistory.getTransactionAmount(),
+                transferHistory.getTransferType(),
+                transferHistory.getSender(),
+                null);
     }
 
-    public static class DepositResponse extends TransferResponse {
-        private String sender;
-
-        private DepositResponse(TransferHistory transferHistory) {
-            super(transferHistory);
-            this.sender = transferHistory.getSender();
-        }
-
-        public static DepositResponse of(TransferHistory transferHistory) {
-            return new DepositResponse(transferHistory);
-        }
-    }
-
-    public static class WithdrawalResponse extends TransferResponse {
-        private String recipient;
-
-        private WithdrawalResponse(TransferHistory transferHistory) {
-            super(transferHistory);
-            this.recipient = transferHistory.getRecipient();
-        }
-
-        public static WithdrawalResponse of(TransferHistory transferHistory) {
-            return new WithdrawalResponse(transferHistory);
-        }
+    public static TransferResponse toWithdrawResponse(TransferHistory transferHistory) {
+        return new TransferResponse(transferHistory.getRemainBalance(),
+                transferHistory.getTransactionAmount(),
+                transferHistory.getTransferType(),
+                null,
+                transferHistory.getRecipient());
     }
 
 }

@@ -24,14 +24,15 @@ public class CustomSharingMemberRepositoryImpl implements CustomSharingMemberRep
                         member.memberIdx,
                         member.nickname,
                         sportsClub.imgUrl,
-                        sharingMember.isLeader
+                        sharingMember.isLeader,
+                        sportsClub.type
                 ))
                 .from(member)
-                .join(myTeam)
+                .leftJoin(myTeam)
                 .on(myTeam.member.memberIdx.eq(member.memberIdx))
-                .join(sportsClub)
+                .leftJoin(sportsClub)
                 .on(sportsClub.sportsClubIdx.eq(myTeam.sportsClub.sportsClubIdx))
-                .join(sharingMember)
+                .leftJoin(sharingMember)
                 .on(sharingMember.member.memberIdx.eq(member.memberIdx))
                 .where(sharingMember.sharingAccount.sharingAccountIdx.eq(sharingAccountIdx))
                 .fetch();
