@@ -4,17 +4,13 @@ import com.togetherhana.exception.BaseException;
 import com.togetherhana.exception.ErrorType;
 import com.togetherhana.member.entity.Member;
 import com.togetherhana.sharingAccount.entity.SharingAccount;
-import com.togetherhana.sharingAccount.entity.SharingMember;
 import com.togetherhana.sharingAccount.service.SharingAccountService;
 import com.togetherhana.transfer.dto.TransferRequest;
 import com.togetherhana.transfer.dto.TransferResponse;
-import com.togetherhana.transfer.dto.TransferResponse.DepositResponse;
-import com.togetherhana.transfer.dto.TransferResponse.WithdrawalResponse;
 import com.togetherhana.transfer.entity.TransactionType;
 import com.togetherhana.transfer.entity.TransferHistory;
 import com.togetherhana.transfer.repository.TransferRepository;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,9 +29,9 @@ public class TransferService {
 
         return transferHistories.stream().map(transferHistory -> {
             if (transferHistory.getTransferType().equals(TransactionType.DEPOSIT)) {
-                return DepositResponse.of(transferHistory);
+                return TransferResponse.toDepositResponse(transferHistory);
             }
-            return WithdrawalResponse.of(transferHistory);
+            return TransferResponse.toWithdrawResponse(transferHistory);
         }).toList();
     }
 

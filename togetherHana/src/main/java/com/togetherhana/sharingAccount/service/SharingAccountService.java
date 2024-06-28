@@ -81,7 +81,14 @@ public class SharingAccountService {
     }
 
     public List<SharingMemberResponse> findSharingMemberInfo(Long sharingAccountIdx) {
-        return sharingMemberRepository.findSharingMemberWithTeam(sharingAccountIdx);
+        SharingAccount sharingAccount = sharingAccountRepository.findById(sharingAccountIdx)
+                .orElseThrow(() -> new BaseException(ErrorType.SHARING_ACCOUNT_NOT_FOUND));
+
+        return sharingMemberRepository.findSharingMemberWithTeam(sharingAccountIdx)
+                .stream()
+                .filter(sharingMemberResponse -> sharingMemberResponse.getSportsType().isEmpty() ||
+                                sharingMemberResponse.getSportsType().get().equals(sharingAccount.getSharePurpose())
+                        ).collect(Collectors.toList());
     }
 
     public Boolean collectMoney(Member member, TaxCollectRequest taxCollectRequest) {

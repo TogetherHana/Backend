@@ -29,10 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/sharing-account")
 public class SharingAccountController {
     private final SharingAccountService sharingAccountService;
-    /**
-     * memberRepo 의존성은 나중에 삭제
-     */
-    private final MemberRepository memberRepository;
     private final TransferService transferService;
 
     @PostMapping("/create")
