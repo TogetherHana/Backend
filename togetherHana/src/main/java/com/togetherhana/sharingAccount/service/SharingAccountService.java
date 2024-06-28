@@ -11,6 +11,7 @@ import com.togetherhana.member.entity.DeviceInfo;
 import com.togetherhana.member.entity.Member;
 import com.togetherhana.notification.event.NotificationEvent;
 import com.togetherhana.notification.service.NotificationService;
+import com.togetherhana.sharingAccount.dto.ParticipateRequest;
 import com.togetherhana.sharingAccount.dto.SharingAccountCreateRequest;
 import com.togetherhana.sharingAccount.dto.SharingAccountCreateResponse;
 import com.togetherhana.sharingAccount.dto.SharingAccountResponse;
@@ -87,8 +88,8 @@ public class SharingAccountService {
         return sharingMemberRepository.findSharingMemberWithTeam(sharingAccountIdx)
                 .stream()
                 .filter(sharingMemberResponse -> sharingMemberResponse.getSportsType().isEmpty() ||
-                                sharingMemberResponse.getSportsType().get().equals(sharingAccount.getSharePurpose())
-                        ).collect(Collectors.toList());
+                        sharingMemberResponse.getSportsType().get().equals(sharingAccount.getSharePurpose())
+                ).collect(Collectors.toList());
     }
 
     public Boolean collectMoney(Member member, TaxCollectRequest taxCollectRequest) {
@@ -103,6 +104,17 @@ public class SharingAccountService {
         return Boolean.TRUE;
     }
 
+    public void verifyIsLeader(Long sharingAccountIdx, Long memberIdx) {
+        SharingMember sharingMember = sharingMemberRepository.findBySharingAccount_SharingAccountIdxAndMember_MemberIdx(
+                        sharingAccountIdx,
+                        memberIdx)
+                .orElseThrow(() -> new BaseException(SHARING_MEMBER_NOT_FOUND));
+
+        if (sharingMember.getIsLeader().equals(Boolean.FALSE)) {
+            throw new BaseException(LEADER_PRIVILEGES_REQUIRED);
+        }
+    }
+
     private void sendMoneyNotification(List<Integer> perMoney, List<SharingMember> sharingMembers) {
         for (int i = 0; i < perMoney.size(); i++) {
             for (DeviceInfo deviceInfo : sharingMembers.get(i).getMember().getDeviceInfos()) {
@@ -113,17 +125,6 @@ public class SharingAccountService {
                         .deviceToken(deviceInfo.getDeviceToken()).build();
                 notificationService.publishPushEvent(event);
             }
-        }
-    }
-
-    public void verifyIsLeader(Long sharingAccountIdx, Long memberIdx) {
-        SharingMember sharingMember = sharingMemberRepository.findBySharingAccount_SharingAccountIdxAndMember_MemberIdx(
-                        sharingAccountIdx,
-                        memberIdx)
-                .orElseThrow(() -> new BaseException(SHARING_MEMBER_NOT_FOUND));
-
-        if (sharingMember.getIsLeader().equals(Boolean.FALSE)) {
-            throw new BaseException(LEADER_PRIVILEGES_REQUIRED);
         }
     }
 

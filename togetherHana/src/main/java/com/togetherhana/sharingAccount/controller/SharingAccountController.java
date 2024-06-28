@@ -4,6 +4,7 @@ import com.togetherhana.auth.jwt.Auth;
 import com.togetherhana.base.BaseResponse;
 import com.togetherhana.member.entity.Member;
 import com.togetherhana.member.repository.MemberRepository;
+import com.togetherhana.sharingAccount.dto.ParticipateRequest;
 import com.togetherhana.sharingAccount.dto.SharingAccountCreateRequest;
 import com.togetherhana.sharingAccount.dto.SharingAccountCreateResponse;
 import com.togetherhana.sharingAccount.dto.SharingAccountResponse;
