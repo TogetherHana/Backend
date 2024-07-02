@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class SystemEventService {
+public class SystemEventRedissonService {
 
     private static final String EVENT_KEY = "event:winner";
     private static final String LOCK_KEY = "event:lock";
@@ -22,6 +22,8 @@ public class SystemEventService {
     private final RedissonClient redissonClient;
 
     public boolean tryGetTicket(Long memberIdx) {
+        long requestTime = System.currentTimeMillis();
+        log.info("티켓 시도 시간: 사용자 {} - {}", memberIdx, requestTime);
 
         // 중복 참여 방지 : 똑같은 사용자가 여러번 요청한 경우
         if (redisTemplate.opsForList().range(EVENT_KEY, 0, -1).contains(memberIdx.toString())) {
@@ -35,6 +37,8 @@ public class SystemEventService {
         try {
             // 락을 대기 시간 10초, 락 임대 시간 30초로 설정
             if (lock.tryLock(10, 30, TimeUnit.SECONDS)) {
+                //long lockAcquiredTime = System.currentTimeMillis();
+                //log.info("락 획득 시간: 사용자 {} - {}", memberIdx, lockAcquiredTime);
                 isLocked = true;
 
                 // 중복 참여 방지 로직 재검토 (락 획득 후)

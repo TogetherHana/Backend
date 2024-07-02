@@ -56,6 +56,7 @@ public enum ErrorType {
 	GAME_OPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 게임선택지가 존재하지 않습니다."),
 
 	INVAILD_MILEAGE_IDX(HttpStatus.NOT_FOUND, "마일리지 정보를 찾을 수 없습니다."),
+	NO_EVENT_WINNERS(HttpStatus.NOT_FOUND, "이벤트 당첨자가 없습니다."),
 	/**
 	 * 500 INTERNAL SERVER
 	 */
