@@ -24,8 +24,6 @@ public class RedisConfig {
     @Value("${spring.data.redis.password}")
     private String redisPwd;
 
-    private static final String REDISSON_HOST_PREFIX = "redis://";
-
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
