@@ -12,7 +12,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class SystemEventSortedSetService {
+public class SystemEventService {
 
     private static final String EVENT_KEY = "event:winner";
     private static final int MAX_WINNERS = 5; // 최대 당첨자 수
@@ -20,7 +20,7 @@ public class SystemEventSortedSetService {
     private final RedisTemplate<String, String> redisTemplate;
 
 
-    public void addOnRedis(Long memberIdx){
+    public void addQueue(Long memberIdx){
         final long now = System.currentTimeMillis();
 
         redisTemplate.opsForZSet().add(EVENT_KEY, memberIdx.toString(), now);
