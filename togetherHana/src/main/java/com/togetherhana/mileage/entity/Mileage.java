@@ -7,8 +7,8 @@ import com.togetherhana.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name="mileage")
-@Table(name="mileage")
+@Entity(name = "mileage")
+@Table(name = "mileage")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -17,7 +17,7 @@ public class Mileage extends BaseEntity {
 
     // 마일리지 아이디
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mileage_idx")
     private Long mileageIdx;
 
@@ -29,5 +29,9 @@ public class Mileage extends BaseEntity {
             throw new BaseException(ErrorType.NOT_ENOUGH_MILEAGE_AMOUNT);
         }
         return amount -= usedAmount;
+    }
+
+    public long plus(long amount) {
+        return this.amount += amount;
     }
 }

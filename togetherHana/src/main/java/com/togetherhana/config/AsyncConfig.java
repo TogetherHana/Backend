@@ -27,4 +27,13 @@ public class AsyncConfig {
         executor.initialize();
         return executor;
     }
+
+    @Bean("eventConcludeExecutor")
+    public TaskExecutor getEventConcludeExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(10);
+        executor.setThreadNamePrefix("TogetherHana-Event-Thread: ");
+        executor.initialize();
+        return executor;
+    }
 }

@@ -1,6 +1,8 @@
 package com.togetherhana.member.repository;
 
 import com.togetherhana.member.entity.Member;
+import java.util.Collection;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,4 +18,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Member findByPhoneNumberAndName(String phoneNumber, String name);
     Member findByMemberIdx(Long memberIdx);
+
 }

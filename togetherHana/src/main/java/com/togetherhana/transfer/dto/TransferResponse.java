@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.togetherhana.transfer.entity.TransactionType;
 import com.togetherhana.transfer.entity.TransferHistory;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,13 +21,15 @@ public class TransferResponse {
     private String sender;
     @JsonInclude(Include.NON_NULL)
     private String recipient;
+    private LocalDateTime createdAt;
 
     public static TransferResponse toDepositResponse(TransferHistory transferHistory) {
         return new TransferResponse(transferHistory.getRemainBalance(),
                 transferHistory.getTransactionAmount(),
                 transferHistory.getTransferType(),
                 transferHistory.getSender(),
-                null);
+                null,
+                transferHistory.getCreatedAt());
     }
 
     public static TransferResponse toWithdrawResponse(TransferHistory transferHistory) {
@@ -34,7 +37,8 @@ public class TransferResponse {
                 transferHistory.getTransactionAmount(),
                 transferHistory.getTransferType(),
                 null,
-                transferHistory.getRecipient());
+                transferHistory.getRecipient(),
+                transferHistory.getCreatedAt());
     }
 
 }
