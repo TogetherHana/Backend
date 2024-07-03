@@ -4,7 +4,9 @@ import com.togetherhana.exception.BaseException;
 import com.togetherhana.exception.ErrorType;
 import com.togetherhana.member.dto.MyInfoResponse;
 import com.togetherhana.member.dto.SignUpRequest;
+import com.togetherhana.member.entity.DeviceInfo;
 import com.togetherhana.member.entity.Member;
+import com.togetherhana.member.repository.DeviceInfoRepository;
 import com.togetherhana.member.repository.MemberRepository;
 import com.togetherhana.mileage.entity.Mileage;
 import com.togetherhana.mileage.repository.MileageRepository;
@@ -24,6 +26,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MileageRepository mileageRepository;
     private final MyteamRepository myteamRepository;
+    private final DeviceInfoRepository deviceInfoRepository;
 
     @Transactional
     public Long saveMember(SignUpRequest signUpRequest) {
@@ -42,20 +45,25 @@ public class MemberService {
                 .mileage(mileage)
                 .build();
         Member savedMember = memberRepository.save(member);
+        deviceInfoRepository.save(DeviceInfo.builder()
+                .deviceToken(signUpRequest.getFcmToken())
+                .member(savedMember).build());
+
         return savedMember.getMemberIdx();
 
     }
 
     public void joinedMemberCheck(SignUpRequest signUpRequest) {
-        Member member = memberRepository.findByPhoneNumberAndName(signUpRequest.getPhoneNumber(), signUpRequest.getName());
-        if(member != null) {
+        Member member = memberRepository.findByPhoneNumberAndName(signUpRequest.getPhoneNumber(),
+                signUpRequest.getName());
+        if (member != null) {
             throw new BaseException(ErrorType.JOINED_MEMBER);
         }
     }
 
-    public Member getMemberByDeviceToken(String deviceToken){
+    public Member getMemberByDeviceToken(String deviceToken) {
         Member member = memberRepository.findByDeviceToken(deviceToken);
-        if(member == null) {
+        if (member == null) {
             throw new BaseException(ErrorType.MEMBER_BY_DEVICE_TOKEN_NOT_FOUND);
         }
         return member;
@@ -64,7 +72,7 @@ public class MemberService {
     // 닉네임 중복 체크
     public Boolean nicknameDuplicationCheck(String nickname) {
         Member member = memberRepository.findByNickname(nickname);
-        if(member != null) {
+        if (member != null) {
             return true;
         }
         return false;
@@ -73,12 +81,12 @@ public class MemberService {
     // 내정보 조회(마일리지, 응원팀, 닉네임) - 메인 화면
     public MyInfoResponse getMyInfoByMemberIdx(Long memberIdx) {
 
-       Member member = memberRepository.findById(memberIdx)
-               .orElseThrow(() -> new BaseException(ErrorType.INVAILD_MEMBER_IDX));
-       //log.info("마일리지 잔액 : "+ member.getMileage().getAmount());
+        Member member = memberRepository.findById(memberIdx)
+                .orElseThrow(() -> new BaseException(ErrorType.INVALID_MEMBER_IDX));
+        //log.info("마일리지 잔액 : "+ member.getMileage().getAmount());
 
-       List<MyTeam> myTeamList = myteamRepository.findByMember_MemberIdx(memberIdx);
+        List<MyTeam> myTeamList = myteamRepository.findByMember_MemberIdx(memberIdx);
 
-       return new MyInfoResponse(member,myTeamList);
+        return new MyInfoResponse(member, myTeamList);
     }
 }

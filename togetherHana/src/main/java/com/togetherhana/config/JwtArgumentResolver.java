@@ -37,7 +37,7 @@ public class JwtArgumentResolver implements HandlerMethodArgumentResolver {
         String token = JwtTokenExtractor.extractJwt(request);
 
         Long memberIdx = jwtTokenProvider.getMemberIdxFromToken(token);
-        return memberRepository.findById(memberIdx).orElseThrow(() -> new BaseException(ErrorType.INVAILD_MEMBER_IDX));
+        return memberRepository.findById(memberIdx).orElseThrow(() -> new BaseException(ErrorType.INVALID_MEMBER_IDX));
 
     }
 }

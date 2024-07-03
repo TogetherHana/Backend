@@ -21,4 +21,6 @@ public class SignUpRequest {
 
     private String address;
 
+    private String fcmToken;
+
 }
