@@ -43,4 +43,6 @@ public class RedisConfig {
         redisTemplate.setHashValueSerializer(new StringRedisSerializer(StandardCharsets.UTF_8));
         return redisTemplate;
     }
+
+
 }

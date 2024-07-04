@@ -22,7 +22,7 @@ public class MyteamController {
     private final MyteamService myteamService;
 
     @GetMapping("/all")
-    public BaseResponse<List<SportsClubResponse>> getSportsCLubInfo(String type) {
+    public BaseResponse<List<SportsClubResponse>> getSportsCLubInfo(@RequestParam(name = "type") String type) {
         SportsType sportsType = SportsType.byName(type);
         log.info(sportsType.toString());
         return BaseResponse.success(myteamService.getAllSportsClub(sportsType));

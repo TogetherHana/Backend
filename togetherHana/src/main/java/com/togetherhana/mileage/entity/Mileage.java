@@ -13,6 +13,7 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
+@ToString
 public class Mileage extends BaseEntity {
 
     // 마일리지 아이디
@@ -33,5 +34,6 @@ public class Mileage extends BaseEntity {
 
     public long plus(long amount) {
         return this.amount += amount;
+
     }
 }
