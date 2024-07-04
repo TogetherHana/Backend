@@ -1,5 +1,6 @@
 package com.togetherhana.game.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
@@ -34,5 +35,17 @@ public class CustomGameRepositoryImpl implements CustomGameRepository {
 			.fetchOne();
 
 		return Optional.ofNullable(finedGame);
+	}
+
+	@Override
+	public List<Game> findGameHistoryBySharingAccountIdx(Long sharingAccountIdx) {
+		return queryFactory
+			.selectFrom(game)
+			.leftJoin(game.gameParticipants, gameParticipant).fetchJoin()
+			.leftJoin(gameParticipant.sharingMember, sharingMember).fetchJoin()
+			.leftJoin(sharingMember.member, member).fetchJoin()
+			.where(game.sharingAccount.sharingAccountIdx.eq(sharingAccountIdx))
+			.orderBy(game.createdAt.desc())
+			.fetch();
 	}
 }

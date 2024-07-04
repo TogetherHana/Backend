@@ -41,6 +41,9 @@ public class Game extends BaseEntity {
     @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
     private List<GameParticipant> gameParticipants;
 
+    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
+    private List<GameOption> gameOptions;
+
     @Builder
     public Game(String gameTitle, LocalDateTime deadline, Integer fine, SharingAccount sharingAccount) {
         this.gameTitle = gameTitle;

@@ -16,7 +16,9 @@ import com.togetherhana.game.dto.request.GameOptionRequestDto;
 import com.togetherhana.game.dto.request.GameCreateRequestDto;
 import com.togetherhana.game.dto.request.OptionChoiceRequestDto;
 import com.togetherhana.game.dto.response.GameDetailResponseDto;
+import com.togetherhana.game.dto.response.GameHistoryResponseDto;
 import com.togetherhana.game.dto.response.GameOptionDto;
+import com.togetherhana.game.dto.response.GameResultDto;
 import com.togetherhana.game.dto.response.MemberDto;
 import com.togetherhana.game.dto.response.GameSelectResponseDto;
 import com.togetherhana.game.entity.Game;
@@ -162,7 +164,6 @@ public class GameService {
 		return GameSelectResponseDto.of(game.getGameTitle(), memberDtos);
 	}
 
-	@Transactional
 	public GameDetailResponseDto getGameDetail(Long memberIdx, Long gameIdx) {
 		Game game = gameRepository.findGameDetailByGameIdx(gameIdx)
 			.orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
@@ -172,12 +173,12 @@ public class GameService {
 		boolean isVotingMember = game.getGameParticipants().stream()
 			.anyMatch(participant -> participant.getSharingMember().getMember().getMemberIdx().equals(memberIdx));
 
-		List<GameOptionDto> gameOptionDtos = game.getGameParticipants().stream()
-			.collect(Collectors.groupingBy(GameParticipant::getGameOption))
-			.entrySet().stream()
-			.map(gameOptionEntry -> {
-				GameOption gameOption = gameOptionEntry.getKey();
-				List<MemberDto> memberDtos = gameOptionEntry.getValue().stream()
+		List<GameOption> gameOptions = game.getGameOptions();
+
+		List<GameOptionDto> gameOptionDtos = gameOptions.stream()
+			.map(gameOption -> {
+				List<MemberDto> memberDtos = game.getGameParticipants().stream()
+					.filter(gameParticipant -> gameParticipant.getGameOption().equals(gameOption))
 					.map(gameParticipant -> MemberDto.of(gameParticipant.getSharingMember().getMember()))
 					.collect(Collectors.toList());
 				return GameOptionDto.of(gameOption, memberDtos);
@@ -185,6 +186,42 @@ public class GameService {
 			.collect(Collectors.toList());
 
 		return GameDetailResponseDto.of(isVotingClosed, isVotingMember, game, gameOptionDtos);
+	}
+
+	public GameHistoryResponseDto getGameHistoryAndCurrentGame(Long sharingAccountIdx) {
+		List<Game> games = gameRepository.findGameHistoryBySharingAccountIdx(sharingAccountIdx);
+
+		Game currentGame = games.stream()
+			.filter(Game::getIsPlaying)
+			.findFirst()
+			.orElse(null);
+
+		GameResultDto currentGameDto = currentGame != null ? convertToGameResultDto(currentGame) : null;
+
+		List<GameResultDto> gameHistory = games.stream()
+			.filter(game -> !game.getIsPlaying())
+			.map(this::convertToGameResultDtoWithParticipants)
+			.collect(Collectors.toList());
+
+		return GameHistoryResponseDto.of(currentGameDto, gameHistory);
+	}
+
+	private GameResultDto convertToGameResultDtoWithParticipants(Game game) {
+		List<MemberDto> winners = game.getGameParticipants().stream()
+			.filter(GameParticipant::getIsWinner)
+			.map(participant -> MemberDto.of(participant.getSharingMember().getMember()))
+			.collect(Collectors.toList());
+
+		List<MemberDto> losers = game.getGameParticipants().stream()
+			.filter(participant -> !participant.getIsWinner())
+			.map(participant -> MemberDto.of(participant.getSharingMember().getMember()))
+			.collect(Collectors.toList());
+
+		return GameResultDto.of(game, winners, losers);
+	}
+
+	private GameResultDto convertToGameResultDto(Game game) {
+		return GameResultDto.of(game);
 	}
 
 }

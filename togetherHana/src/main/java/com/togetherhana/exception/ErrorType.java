@@ -27,7 +27,12 @@ public enum ErrorType {
 	ALREADY_MYTEAM_PICKED(HttpStatus.BAD_REQUEST, "이미 응원팀을 설정했습니다."),
 
 	NOT_ENOUGH_MILEAGE_AMOUNT(HttpStatus.BAD_REQUEST, "마일리지 잔액이 부족합니다."),
-	EVENT_END(HttpStatus.BAD_REQUEST, "이벤트가 종료되었습니다."),
+
+	WRONG_INVITATION_CODE(HttpStatus.BAD_REQUEST, "일치하는 초대코드가 없습니다."),
+	NOT_COINCIDE_INVITATION(HttpStatus.BAD_REQUEST, "초대장 코드와 가입하려는 모임통장이 일치하지 않습니다."),
+	ALREADY_PICK(HttpStatus.BAD_REQUEST, "이미 참여한 이벤트입니다."),
+	ALREADY_START(HttpStatus.BAD_REQUEST, "이미 경기가 시작하였습니다."),
+  EVENT_END(HttpStatus.BAD_REQUEST, "이벤트가 종료되었습니다."),
 
 	/**
 	 * 401 UNAUTHROZIED
@@ -48,12 +53,13 @@ public enum ErrorType {
 	 */
 	NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 리소스입니다."),
 	NO_SPORTSCLUB_INFO(HttpStatus.NOT_FOUND, "구단 정보가 존재하지 않습니다."),
-	INVAILD_MEMBER_IDX(HttpStatus.NOT_FOUND, "존재하지 않는 멤버입니다."),
+	INVALID_MEMBER_IDX(HttpStatus.NOT_FOUND, "존재하지 않는 멤버입니다."),
 	MEMBER_BY_DEVICE_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "멤버 정보를 찾을 수 없습니다."),
 	SHARING_ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 모임통장이 존재하지 않습니다."),
 	SHARING_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 모임원이 존재하지 않습니다."),
 	GAME_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 게임이 존재하지 않습니다."),
 	GAME_OPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 게임선택지가 존재하지 않습니다."),
+	EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 이벤트가 존재하지 않습니다."),
 
 	INVAILD_MILEAGE_IDX(HttpStatus.NOT_FOUND, "마일리지 정보를 찾을 수 없습니다."),
 	INVAILD_EVENT_WINNERS(HttpStatus.NOT_FOUND, "이벤트 당첨 정보가 유효하지 않습니다."),

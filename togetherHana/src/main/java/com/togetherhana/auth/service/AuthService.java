@@ -89,7 +89,7 @@ public class AuthService {
 
         // 새로운 토큰 생성
         return generateJwtToken(memberRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(ErrorType.INVAILD_MEMBER_IDX)));
+                .orElseThrow(() -> new BaseException(ErrorType.INVALID_MEMBER_IDX)));
 
     }
 }
