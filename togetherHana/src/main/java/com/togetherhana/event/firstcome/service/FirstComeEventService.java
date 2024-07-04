@@ -1,4 +1,4 @@
-package com.togetherhana.systemEvent.service;
+package com.togetherhana.event.firstcome.service;
 
 import com.togetherhana.exception.BaseException;
 import com.togetherhana.exception.ErrorType;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class SystemEventService {
+public class FirstComeEventService {
 
     private final MileageService mileageService;
     private static final String EVENT_KEY = "event:participant";
@@ -41,14 +41,6 @@ public class SystemEventService {
         return winners.contains(memberIdx.toString());
     }
 
-    public void remainParticipantsCheck(){
-        Set<Object> queue = redisTemplate.opsForZSet().range(EVENT_KEY, 0, -1);
-
-        for (Object people : queue) {
-            Long rank = redisTemplate.opsForZSet().rank(EVENT_KEY, people);
-            log.info("'{}'님의 현재 대기열은 {}명 남았습니다.", people, rank);
-        }
-    }
 
     @Transactional
     public void giveWinningMileage(){
@@ -65,7 +57,8 @@ public class SystemEventService {
             log.info("당첨자들에게 마일리지를 지급했습니다: {}", winnerIdx);
             redisTemplate.opsForZSet().remove(EVENT_KEY, winnerIdx.toString());
             remainingWinners--;
-            log.info("남은 당첨자수 : {}", remainingWinners);
+            //log.info("남은 당첨자수 : {}", remainingWinners);
+
             // max_winners가 publish_size로 딱 나누어떨어지지 않는 경우
             validEnd();
         }

@@ -1,6 +1,6 @@
-package com.togetherhana.systemEvent.scheduler;
+package com.togetherhana.event.firstcome.scheduler;
 
-import com.togetherhana.systemEvent.service.SystemEventService;
+import com.togetherhana.event.firstcome.service.FirstComeEventService;
 import com.togetherhana.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 @Slf4j
-public class SystemEventScheduler {
+public class FirstComeEventScheduler {
 
-    private final SystemEventService systemEventService;
+    private final FirstComeEventService firstComeEventService;
     private volatile boolean eventEnded = false; // 스케줄러 중단 플래그
 
     @Scheduled(fixedDelay = 10000)
@@ -21,13 +21,11 @@ public class SystemEventScheduler {
             return; // 이벤트 종료 시 스케줄러 중단
         }
 
-        log.info("스케줄러 실행");
         try {
-            systemEventService.validEnd();
-            systemEventService.remainParticipantsCheck();
-            systemEventService.giveWinningMileage();
+            firstComeEventService.validEnd();
+            firstComeEventService.giveWinningMileage();
         } catch (BaseException e) {
-            log.info("===== 선착순 이벤트가 종료되었습니다. =====");
+            //log.info("===== 선착순 이벤트가 종료되었습니다. =====");
             eventEnded = true; // 이벤트 종료 시 플래그 설정
         }
     }
