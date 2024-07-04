@@ -30,7 +30,7 @@ public class MileageService {
     }
 
     @Transactional
-    public Boolean depositMileage(Long memberIdx, Long depositAmount) {
+    public void depositMileage(Long memberIdx, Long depositAmount) {
         log.info("마일리지 지급 : {}", memberIdx);
         // 마일리지 정보 조회
         Mileage mileage = mileageRepository.findMileageByMemberIdx(memberIdx);
@@ -42,9 +42,7 @@ public class MileageService {
         }
 
         // 마일리지 입금(잔액 +)
-        mileage.deposit(depositAmount);
-
-        return true;
+        mileage.plus(depositAmount);
     }
 
 

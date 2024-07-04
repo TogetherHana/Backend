@@ -1,7 +1,8 @@
-package com.togetherhana.event.predict.controller;
+package com.togetherhana.event.controller;
 
 import com.togetherhana.auth.jwt.Auth;
 import com.togetherhana.base.BaseResponse;
+import com.togetherhana.event.firstcome.service.FirstComeEventService;
 import com.togetherhana.event.predict.dto.EventConcludeRequest;
 import com.togetherhana.event.predict.dto.EventGameCreateRequest;
 import com.togetherhana.event.predict.dto.EventGameInfoResponse;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/event")
 public class EventController {
     private final EventGameService eventGameService;
+    private final FirstComeEventService firstComeEventService;
+
 
     @GetMapping("/list")
     public BaseResponse<List<EventGameInfoResponse>> eventList() {
@@ -41,5 +44,12 @@ public class EventController {
     @PostMapping("/conclude")
     public BaseResponse<Boolean> conclude(@RequestBody EventConcludeRequest eventConcludeRequest) {
         return BaseResponse.success(eventGameService.concludeEventGame(eventConcludeRequest));
+    }
+
+    // 선착순 이벤트
+    @GetMapping("/get-ticket")
+    public BaseResponse<Boolean> tryGetTicket(@Auth Member member) {
+        firstComeEventService.addQueue(member.getMemberIdx());
+        return BaseResponse.success(firstComeEventService.isWinner(member.getMemberIdx()));
     }
 }
