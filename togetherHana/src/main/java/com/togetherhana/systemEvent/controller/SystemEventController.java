@@ -2,6 +2,7 @@ package com.togetherhana.systemEvent.controller;
 
 import com.togetherhana.auth.jwt.Auth;
 import com.togetherhana.base.BaseResponse;
+import com.togetherhana.exception.BaseException;
 import com.togetherhana.member.entity.Member;
 import com.togetherhana.systemEvent.service.SystemEventService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class SystemEventController {
     @GetMapping("/get-ticket")
     public BaseResponse<Boolean> tryGetTicket(@Auth Member member) {
         systemEventService.addQueue(member.getMemberIdx());
-        return BaseResponse.success(systemEventService.getWinner(member.getMemberIdx()));
+        return BaseResponse.success(systemEventService.isWinner(member.getMemberIdx()));
     }
 
 }

@@ -13,6 +13,7 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
+@ToString
 public class Mileage extends BaseEntity {
 
     // 마일리지 아이디
@@ -29,5 +30,9 @@ public class Mileage extends BaseEntity {
             throw new BaseException(ErrorType.NOT_ENOUGH_MILEAGE_AMOUNT);
         }
         return amount -= usedAmount;
+    }
+
+    public long deposit(long depositAmount) {
+        return amount += depositAmount;
     }
 }
