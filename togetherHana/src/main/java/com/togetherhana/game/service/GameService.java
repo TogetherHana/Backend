@@ -78,7 +78,7 @@ public class GameService {
 	}
 
 	@Transactional
-	public void vote(Long memberIdx, OptionChoiceRequestDto optionChoiceRequestDto) {
+	public Long vote(Long memberIdx, OptionChoiceRequestDto optionChoiceRequestDto) {
 		Game game = findGameById(optionChoiceRequestDto.getGameIdx());
 
 		verifyIsDeadLinePassed(game.getDeadline());
@@ -97,7 +97,8 @@ public class GameService {
 			.game(game)
 			.build();
 
-		gameParticipantRepository.save(gameParticipant);
+		GameParticipant participant = gameParticipantRepository.save(gameParticipant);
+		return participant.getGameOption().getGameOptionIdx();
 	}
 
 	private void verifyIsDeadLinePassed(LocalDateTime deadline) {

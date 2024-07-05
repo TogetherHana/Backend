@@ -38,9 +38,8 @@ public class GameController {
     }
 
     @PostMapping("/option")
-    public BaseResponse vote(@Auth Member member, @RequestBody OptionChoiceRequestDto optionChoiceRequestDto) {
-        gameService.vote(member.getMemberIdx(), optionChoiceRequestDto);
-        return BaseResponse.success();
+    public BaseResponse<Long> vote(@Auth Member member, @RequestBody OptionChoiceRequestDto optionChoiceRequestDto) {
+        return BaseResponse.success(gameService.vote(member.getMemberIdx(), optionChoiceRequestDto));
     }
 
     @PostMapping("/select")
