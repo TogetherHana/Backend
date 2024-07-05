@@ -2,9 +2,15 @@ package com.togetherhana.transfer.service;
 
 import com.togetherhana.exception.BaseException;
 import com.togetherhana.exception.ErrorType;
+import com.togetherhana.member.entity.DeviceInfo;
 import com.togetherhana.member.entity.Member;
+import com.togetherhana.notification.event.NotificationEvent;
+import com.togetherhana.notification.service.NotificationService;
 import com.togetherhana.sharingAccount.entity.SharingAccount;
+import com.togetherhana.sharingAccount.entity.SharingMember;
+import com.togetherhana.sharingAccount.repository.SharingMemberRepository;
 import com.togetherhana.sharingAccount.service.SharingAccountService;
+import com.togetherhana.transfer.dto.DepositRequest;
 import com.togetherhana.transfer.dto.TransferRequest;
 import com.togetherhana.transfer.dto.TransferResponse;
 import com.togetherhana.transfer.entity.TransactionType;
@@ -22,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class TransferService {
     private final TransferRepository transferRepository;
     private final SharingAccountService sharingAccountService;
+    private final SharingMemberRepository sharingMemberRepository;
+    private final NotificationService notificationService;
 
     public List<TransferResponse> findTransferHistory(Long sharingAccountIdx) {
         List<TransferHistory> transferHistories = transferRepository.findAllBySharingAccount_SharingAccountIdx(
@@ -52,7 +60,54 @@ public class TransferService {
                         account);
 
         transferRepository.save(history);
+        sendWithdrawNotification(account.getSharingAccountIdx(), transferRequest.getAmount());
         return true;
+    }
+
+    @Transactional
+    public Boolean deposit(DepositRequest depositRequest) {
+        SharingAccount account = sharingAccountService.findBySharingAccountIdx(depositRequest.getSharingAccountIdx());
+        Long remainBalance = account.deposit(depositRequest.getAmount());
+        TransferHistory history = TransferHistory
+                .depositHistory(remainBalance,
+                        depositRequest.getAmount(),
+                        depositRequest.getSender(),
+                        account.getSharingAccountName(),
+                        account);
+
+        transferRepository.save(history);
+        sendDepositNotification(account.getSharingAccountIdx(), depositRequest.getAmount());
+        return true;
+    }
+
+    private void sendDepositNotification(Long sharingAccountIdx, Long amount) {
+        List<SharingMember> sharingMembers = sharingMemberRepository.findBySharingAccount_SharingAccountIdx(
+                sharingAccountIdx);
+        for (SharingMember sharingMember : sharingMembers) {
+            List<DeviceInfo> deviceInfos = sharingMember.getMember().getDeviceInfos();
+            for (DeviceInfo deviceInfo : deviceInfos) {
+                notificationService.publishPushEvent(NotificationEvent.builder()
+                        .title("거래가 발생했습니다 !")
+                        .body("입금 금액 : " + String.format("%,d", amount) + " 원")
+                        .deviceToken(deviceInfo.getDeviceToken())
+                        .build());
+            }
+        }
+    }
+
+    private void sendWithdrawNotification(Long sharingAccountIdx, Long amount) {
+        List<SharingMember> sharingMembers = sharingMemberRepository.findBySharingAccount_SharingAccountIdx(
+                sharingAccountIdx);
+        for (SharingMember sharingMember : sharingMembers) {
+            List<DeviceInfo> deviceInfos = sharingMember.getMember().getDeviceInfos();
+            for (DeviceInfo deviceInfo : deviceInfos) {
+                notificationService.publishPushEvent(NotificationEvent.builder()
+                        .title("거래가 발생했습니다 !")
+                        .body("출금 금액 : " + String.format("%,d", amount) + " 원")
+                        .deviceToken(deviceInfo.getDeviceToken())
+                        .build());
+            }
+        }
     }
 
     private void verifyPassword(String accountPassword, String inputPassword) {
