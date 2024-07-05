@@ -126,8 +126,6 @@ public class GameService {
 
 	}
 
-
-
 	private Game findGameById(Long gameId) {
 		return gameRepository.findById(gameId)
 			.orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
@@ -173,6 +171,8 @@ public class GameService {
 		boolean isVotingMember = game.getGameParticipants().stream()
 			.anyMatch(participant -> participant.getSharingMember().getMember().getMemberIdx().equals(memberIdx));
 
+		Long votedOptionIdx = findVotedOptionIdx(game, memberIdx);
+
 		List<GameOption> gameOptions = game.getGameOptions();
 
 		List<GameOptionDto> gameOptionDtos = gameOptions.stream()
@@ -185,7 +185,15 @@ public class GameService {
 			})
 			.collect(Collectors.toList());
 
-		return GameDetailResponseDto.of(isVotingClosed, isVotingMember, game, gameOptionDtos);
+		return GameDetailResponseDto.of(votedOptionIdx, isVotingClosed, isVotingMember, game, gameOptionDtos);
+	}
+
+	private Long findVotedOptionIdx(Game game, Long memberIdx) {
+		return game.getGameParticipants().stream()
+			.filter(participant -> participant.getSharingMember().getMember().getMemberIdx().equals(memberIdx))
+			.findFirst()
+			.map(participant -> participant.getGameOption().getGameOptionIdx())
+			.orElse(null);
 	}
 
 	public GameHistoryResponseDto getGameHistoryAndCurrentGame(Long sharingAccountIdx) {
