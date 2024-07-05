@@ -11,6 +11,7 @@ import com.togetherhana.sharingAccount.dto.SharingAccountResponse;
 import com.togetherhana.sharingAccount.dto.SharingMemberResponse;
 import com.togetherhana.sharingAccount.dto.TaxCollectRequest;
 import com.togetherhana.sharingAccount.service.SharingAccountService;
+import com.togetherhana.transfer.dto.DepositRequest;
 import com.togetherhana.transfer.dto.TransferRequest;
 import com.togetherhana.transfer.dto.TransferResponse;
 import com.togetherhana.transfer.service.TransferService;
@@ -59,6 +60,11 @@ public class SharingAccountController {
     @PostMapping("/withdraw")
     public BaseResponse<Boolean> withdrawMoney(@Auth Member member, @RequestBody TransferRequest transferRequest) {
         return BaseResponse.success(transferService.withdraw(member, transferRequest));
+    }
+
+    @PostMapping("/deposit")
+    public BaseResponse<Boolean> depositMoney(@RequestBody DepositRequest depositRequest) {
+        return BaseResponse.success(transferService.deposit(depositRequest));
     }
 
     @PostMapping("/collect")
