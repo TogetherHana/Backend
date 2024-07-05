@@ -34,7 +34,7 @@ public class Game extends BaseEntity {
     private Integer fine;
     private Boolean isPlaying;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sharing_account_idx")
     private SharingAccount sharingAccount;
 
