@@ -30,6 +30,8 @@ public class TransferService {
     private final SharingAccountService sharingAccountService;
     private final SharingMemberRepository sharingMemberRepository;
     private final NotificationService notificationService;
+    private final String DEPOSIT = "입금 금액 : ";
+    private final String WITHDRAW = "출금 금액 : ";
 
     public List<TransferResponse> findTransferHistory(Long sharingAccountIdx) {
         List<TransferHistory> transferHistories = transferRepository.findAllBySharingAccount_SharingAccountIdx(
@@ -60,7 +62,7 @@ public class TransferService {
                         account);
 
         transferRepository.save(history);
-        sendWithdrawNotification(account.getSharingAccountIdx(), transferRequest.getAmount());
+        sendNotification(WITHDRAW, account.getSharingAccountIdx(), transferRequest.getAmount());
         return true;
     }
 
@@ -76,34 +78,19 @@ public class TransferService {
                         account);
 
         transferRepository.save(history);
-        sendDepositNotification(account.getSharingAccountIdx(), depositRequest.getAmount());
+        sendNotification(DEPOSIT, account.getSharingAccountIdx(), depositRequest.getAmount());
         return true;
     }
 
-    private void sendDepositNotification(Long sharingAccountIdx, Long amount) {
+    private void sendNotification(String type, Long sharingAccountIdx, Long amount) {
         List<SharingMember> sharingMembers = sharingMemberRepository.findBySharingAccount_SharingAccountIdx(
                 sharingAccountIdx);
         for (SharingMember sharingMember : sharingMembers) {
             List<DeviceInfo> deviceInfos = sharingMember.getMember().getDeviceInfos();
             for (DeviceInfo deviceInfo : deviceInfos) {
                 notificationService.publishPushEvent(NotificationEvent.builder()
-                        .title("거래가 발생했습니다 !")
-                        .body("입금 금액 : " + String.format("%,d", amount) + " 원")
-                        .deviceToken(deviceInfo.getDeviceToken())
-                        .build());
-            }
-        }
-    }
-
-    private void sendWithdrawNotification(Long sharingAccountIdx, Long amount) {
-        List<SharingMember> sharingMembers = sharingMemberRepository.findBySharingAccount_SharingAccountIdx(
-                sharingAccountIdx);
-        for (SharingMember sharingMember : sharingMembers) {
-            List<DeviceInfo> deviceInfos = sharingMember.getMember().getDeviceInfos();
-            for (DeviceInfo deviceInfo : deviceInfos) {
-                notificationService.publishPushEvent(NotificationEvent.builder()
-                        .title("거래가 발생했습니다 !")
-                        .body("출금 금액 : " + String.format("%,d", amount) + " 원")
+                        .title("거래 내역 알림")
+                        .body(type + String.format("%,d", amount) + " 원")
                         .deviceToken(deviceInfo.getDeviceToken())
                         .build());
             }
