@@ -5,7 +5,10 @@ import static com.togetherhana.exception.ErrorType.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -163,37 +166,54 @@ public class GameService {
 	}
 
 	public GameDetailResponseDto getGameDetail(Long memberIdx, Long gameIdx) {
-		Game game = gameRepository.findGameDetailByGameIdx(gameIdx)
+		Game game = gameRepository.findGameWithOptions(gameIdx)
 			.orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
+		List<GameParticipant> participants = gameRepository.findParticipantsByGameIdx(gameIdx);
 
 		LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
 		boolean isVotingClosed = now.isAfter(game.getDeadline());
-		boolean isVotingMember = game.getGameParticipants().stream()
-			.anyMatch(participant -> participant.getSharingMember().getMember().getMemberIdx().equals(memberIdx));
 
-		Long votedOptionIdx = findVotedOptionIdx(game, memberIdx);
+		Map<Long, List<MemberDto>> votedOptionMembersMap = new HashMap<>();
+		Long votedOptionIdx = findVotedOptionIdxAndPopulateMembersMap(participants, memberIdx, votedOptionMembersMap);
 
-		List<GameOption> gameOptions = game.getGameOptions();
+		boolean isVotingMember = votedOptionIdx != null;
 
-		List<GameOptionDto> gameOptionDtos = gameOptions.stream()
-			.map(gameOption -> {
-				List<MemberDto> memberDtos = game.getGameParticipants().stream()
-					.filter(gameParticipant -> gameParticipant.getGameOption().equals(gameOption))
-					.map(gameParticipant -> MemberDto.of(gameParticipant.getSharingMember().getMember()))
-					.collect(Collectors.toList());
-				return GameOptionDto.of(gameOption, memberDtos);
-			})
-			.collect(Collectors.toList());
+		List<GameOptionDto> gameOptionDtos = createGameOptionDtos(game.getGameOptions(), votedOptionMembersMap);
 
 		return GameDetailResponseDto.of(votedOptionIdx, isVotingClosed, isVotingMember, game, gameOptionDtos);
 	}
 
-	private Long findVotedOptionIdx(Game game, Long memberIdx) {
-		return game.getGameParticipants().stream()
-			.filter(participant -> participant.getSharingMember().getMember().getMemberIdx().equals(memberIdx))
-			.findFirst()
-			.map(participant -> participant.getGameOption().getGameOptionIdx())
-			.orElse(null);
+	private Long findVotedOptionIdxAndPopulateMembersMap(
+		List<GameParticipant> participants,
+		Long memberIdx,
+		Map<Long, List<MemberDto>> votedOptionMembersMap
+	) {
+		Long votedOptionIdx = null;
+		for (GameParticipant participant : participants) {
+			Long gameOptionIdx = participant.getGameOption().getGameOptionIdx();
+			MemberDto memberDto = MemberDto.of(participant.getSharingMember().getMember());
+
+			votedOptionMembersMap
+				.computeIfAbsent(gameOptionIdx, k -> new ArrayList<>())
+				.add(memberDto);
+
+			if (participant.getSharingMember().getMember().getMemberIdx().equals(memberIdx)) {
+				votedOptionIdx = gameOptionIdx;
+			}
+		}
+		return votedOptionIdx;
+	}
+
+	private List<GameOptionDto> createGameOptionDtos(
+		List<GameOption> gameOptions,
+		Map<Long, List<MemberDto>> votedOptionMembersMap
+	) {
+		return gameOptions.stream()
+			.map(gameOption -> GameOptionDto.of(
+				gameOption,
+				votedOptionMembersMap.getOrDefault(gameOption.getGameOptionIdx(), Collections.emptyList())
+			))
+			.collect(Collectors.toList());
 	}
 
 	public GameHistoryResponseDto getGameHistoryAndCurrentGame(Long sharingAccountIdx) {

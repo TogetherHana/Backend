@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.togetherhana.game.entity.Game;
+import com.togetherhana.game.entity.GameParticipant;
+import com.togetherhana.game.entity.QGame;
 
 import static com.togetherhana.game.entity.QGame.game;
 import static com.togetherhana.game.entity.QGameOption.gameOption;
@@ -23,18 +25,23 @@ public class CustomGameRepositoryImpl implements CustomGameRepository {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public Optional<Game> findGameDetailByGameIdx(Long gameIdx) {
-
-		Game finedGame = queryFactory
-			.selectFrom(game)
-			.leftJoin(game.gameParticipants, gameParticipant).fetchJoin()
-			.leftJoin(gameParticipant.gameOption, gameOption).fetchJoin()
-			.leftJoin(gameParticipant.sharingMember, sharingMember).fetchJoin()
-			.leftJoin(sharingMember.member, member).fetchJoin()
-			.where(game.id.eq(gameIdx))
+	public Optional<Game> findGameWithOptions(Long gameIdx) {
+		Game game = queryFactory.selectFrom(QGame.game)
+			.leftJoin(QGame.game.gameOptions, gameOption).fetchJoin()
+			.where(QGame.game.id.eq(gameIdx))
+			.distinct()
 			.fetchOne();
 
-		return Optional.ofNullable(finedGame);
+		return Optional.ofNullable(game);
+	}
+
+	@Override
+	public List<GameParticipant> findParticipantsByGameIdx(Long gameIdx) {
+		return queryFactory.selectFrom(gameParticipant)
+			.leftJoin(gameParticipant.sharingMember, sharingMember).fetchJoin()
+			.leftJoin(sharingMember.member, member).fetchJoin()
+			.where(gameParticipant.game.id.eq(gameIdx))
+			.fetch();
 	}
 
 	@Override
