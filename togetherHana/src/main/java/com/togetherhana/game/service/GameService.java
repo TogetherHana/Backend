@@ -30,7 +30,10 @@ import com.togetherhana.game.entity.GameParticipant;
 import com.togetherhana.game.repository.GameOptionRepository;
 import com.togetherhana.game.repository.GameParticipantRepository;
 import com.togetherhana.game.repository.GameRepository;
+import com.togetherhana.member.entity.DeviceInfo;
 import com.togetherhana.member.entity.Member;
+import com.togetherhana.notification.event.NotificationEvent;
+import com.togetherhana.notification.service.NotificationService;
 import com.togetherhana.sharingAccount.entity.SharingAccount;
 import com.togetherhana.sharingAccount.entity.SharingMember;
 import com.togetherhana.sharingAccount.service.SharingAccountService;
@@ -45,6 +48,7 @@ public class GameService {
 	private final GameOptionRepository gameOptionRepository;
 	private final GameParticipantRepository gameParticipantRepository;
 	private final SharingAccountService sharingAccountService;
+	private final NotificationService notificationService;
 
 	@Transactional
 	public void createGame(Long sharingAccountIdx, GameCreateRequestDto gameCreateRequestDto) {
@@ -126,6 +130,8 @@ public class GameService {
 
 		game.endGame();
 
+		sendFineNotification(loserMembers, game.getFine());
+
 		return createGameSelectResponseDto(game, loserMembers);
 
 	}
@@ -156,6 +162,18 @@ public class GameService {
 		return loserParticipants.stream()
 			.map(gameParticipant -> gameParticipant.getSharingMember().getMember())
 			.collect(Collectors.toList());
+	}
+
+	private void sendFineNotification(List<Member> members, Integer fine) {
+		for (Member member : members) {
+			for (DeviceInfo deviceInfo : member.getDeviceInfos()) {
+				NotificationEvent event = NotificationEvent.builder()
+					.title("벌금 송금 요청이 왔어요 !")
+					.body("입금 요청 금액은 " + String.format("%,d", fine + "원 입니다."))
+					.deviceToken(deviceInfo.getDeviceToken()).build();
+				notificationService.publishPushEvent(event);
+			}
+		}
 	}
 
 	private GameSelectResponseDto createGameSelectResponseDto(Game game, List<Member> loserMembers) {
