@@ -62,4 +62,12 @@ public class GameController {
 	) {
 		return BaseResponse.success(gameService.getGameHistoryAndCurrentGame(sharingAccountIdx));
 	}
+
+	@GetMapping("/v0/{gameIdx}")
+	public BaseResponse getGameDetailV0(@Auth Member member,
+		@PathVariable(name = "gameIdx") final Long gameIdx
+	) {
+		gameService.getGameDetailV0(member.getMemberIdx(), gameIdx);
+		return BaseResponse.success();
+	}
 }

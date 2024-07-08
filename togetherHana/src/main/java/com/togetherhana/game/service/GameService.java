@@ -253,4 +253,19 @@ public class GameService {
 		return GameResultDto.of(game);
 	}
 
+	public GameDetailResponseDto getGameDetailV0(Long memberIdx, Long gameIdx) {
+		Game game = gameRepository.findById(gameIdx).orElseThrow(() -> new BaseException(GAME_NOT_FOUND));
+
+		List<GameParticipant> participants = game.getGameParticipants();
+		LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+		boolean isVotingClosed = now.isAfter(game.getDeadline());
+
+		Map<Long, List<MemberDto>> votedOptionMembersMap = new HashMap<>();
+		Long votedOptionIdx = findVotedOptionIdxAndPopulateMembersMap(participants, memberIdx, votedOptionMembersMap);
+
+		boolean isVotingMember = votedOptionIdx != null;
+		List<GameOptionDto> gameOptionDtos = createGameOptionDtos(game.getGameOptions(), votedOptionMembersMap);
+
+		return GameDetailResponseDto.of(votedOptionIdx, isVotingClosed, isVotingMember, game, gameOptionDtos);
+	}
 }
