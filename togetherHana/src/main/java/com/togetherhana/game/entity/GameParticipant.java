@@ -4,6 +4,7 @@ import com.togetherhana.base.BaseEntity;
 import com.togetherhana.sharingAccount.entity.SharingMember;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,11 +26,11 @@ public class GameParticipant extends BaseEntity {
     @Column(name = "game_participant_idx")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sharing_member_idx")
     private SharingMember sharingMember;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_option_idx")
     private GameOption gameOption;
 
